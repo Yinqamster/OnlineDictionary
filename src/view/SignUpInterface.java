@@ -2,8 +2,6 @@ package view;
 
 
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import control.UserDatabase;
 
 public class SignUpInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
@@ -84,6 +84,9 @@ public class SignUpInterface extends JFrame{
 		//			System.out.println("两次密码不一致");
 				}
 				else {
+					UserDatabase ud = new UserDatabase();
+					ud.createConnection();
+					ud.insert(name, password);
 					SignUpInterface.this.setVisible(false);
 					new SignUpSucceed();
 				}
@@ -158,6 +161,8 @@ class PasswordNotEqual extends JFrame {
 
 class SignUpSucceed extends JFrame {
 	private static final long serialVersionUID = 1L;
+	
+	
 	public SignUpSucceed() {
 		this.setTitle("提示");
 		this.setSize(200, 100);

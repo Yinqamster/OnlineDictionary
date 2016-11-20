@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import control.UserDatabase;
+
 public class LogInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
@@ -131,7 +133,7 @@ public class LogInterface extends JFrame{
 	private void bindLogClickEvent() {
 		jpLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				//登录后的界面
 			}
 		});
 	}
@@ -146,7 +148,7 @@ public class LogInterface extends JFrame{
 	}
 	
 	private void bindTourOkClickEvent() {
-		
+		//游客界面
 	}
 	
 	public static void main(String args[]) {
