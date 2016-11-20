@@ -11,7 +11,7 @@ public class UserDatabase {
 	private final String driver = "com.mysql.jdbc.Driver";
 	private final String url = "jdbc:mysql://localhost:3306/dictionary";
 	private final String userName = "root";
-	private final String userPassword = "yinqi1996/0420";
+	private final String userPassword = "";
 	
 //	static int user_id = 0;
 	
