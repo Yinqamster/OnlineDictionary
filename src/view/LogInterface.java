@@ -3,6 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,7 +17,20 @@ import javax.swing.JTextField;
 public class LogInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
+	JTextField jtfUser = new JTextField(10);
+	JPasswordField jpfPassword = new JPasswordField(10);
+	JButton jpLog = new JButton("登录");
+	JButton jpSignUp = new JButton("注册");
+	JButton jbtTourOk = new JButton("Go");
+	
 	public LogInterface() {
+		
+		this.setTitle("Online Dictionary");
+		this.setSize(500, 300);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
 		setLayout (new BorderLayout(10, 10));
 		JPanel jpShowPane = constructShowPane();
 		jpShowPane.setPreferredSize(new Dimension(300, 500));
@@ -24,6 +39,10 @@ public class LogInterface extends JFrame{
 		JPanel jpLogPane = constructLogPane();
 		jpLogPane.setPreferredSize(new Dimension(100, 500));
 		add(jpLogPane, BorderLayout.CENTER);
+		
+		bindLogClickEvent();
+		bindSighUpClickEvent();
+		bindTourOkClickEvent();
 		
 		
 	}
@@ -38,7 +57,7 @@ public class LogInterface extends JFrame{
 		jlbUser.setFont(new java.awt.Font("宋体", 1, 15));
 		jlbUser.setPreferredSize(new Dimension(110,30));
 		jpUserPane.add(jlbUser);
-		JTextField jtfUser = new JTextField(10);
+	//	JTextField jtfUser = new JTextField(10);
 		jtfUser.setPreferredSize(new Dimension(110,20));
 		jpUserPane.add(jtfUser);
 		
@@ -48,15 +67,15 @@ public class LogInterface extends JFrame{
 		jlbPassword.setFont(new java.awt.Font("宋体", 1, 15));
 		jlbPassword.setPreferredSize(new Dimension(110, 30));
 		jpPasswordPane.add(jlbPassword);
-		JPasswordField jpfPassword = new JPasswordField(10);
-	//	JTextField jtfPassword = new JTextField(10);
+//		JPasswordField jpfPassword = new JPasswordField(10);
+	/*	JTextField jtfPassword = new JTextField(10); */
 		jpPasswordPane.add(jpfPassword);
 		
 		JPanel jpSignPane = new JPanel();
 		jpSignPane.setPreferredSize(new Dimension(110, 100));
-		JButton jpLog = new JButton("登录");
+//		JButton jpLog = new JButton("登录");
 		jpSignPane.add(jpLog);
-		JButton jpSignUp = new JButton("注册");
+//		JButton jpSignUp = new JButton("注册");
 		jpSignPane.add(jpSignUp);
 		
 		jpLogPane.add(jpUserPane, BorderLayout.NORTH);
@@ -98,7 +117,7 @@ public class LogInterface extends JFrame{
 		JPanel jpTourPane = new JPanel();
 		JLabel jlbText3 = new JLabel("进入访客模式");
 		jlbText3.setFont(new java.awt.Font("宋体", 0, 18));
-		JButton jbtTourOk = new JButton("Go");
+//		JButton jbtTourOk = new JButton("Go");
 		jbtTourOk.setFont(new java.awt.Font("宋体", 0, 10));
 		jpTourPane.add(jlbText3);
 		jpTourPane.add(jbtTourOk);
@@ -107,6 +126,27 @@ public class LogInterface extends JFrame{
 		jpShowPane.add(jpTextPane, BorderLayout.CENTER);
 		jpShowPane.add(jpTourPane, BorderLayout.SOUTH);
 		return jpShowPane;
+	}
+	
+	private void bindLogClickEvent() {
+		jpLog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+	}
+	
+	private void bindSighUpClickEvent() {
+		jpSignUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LogInterface.this.setVisible(false);
+				new SignUpInterface();
+			}
+		});
+	}
+	
+	private void bindTourOkClickEvent() {
+		
 	}
 	
 	public static void main(String args[]) {
