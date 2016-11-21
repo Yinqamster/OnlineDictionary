@@ -1,6 +1,7 @@
 package control;
 
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.mysql.jdbc.Connection;
@@ -24,6 +25,7 @@ public class UserDatabase {
 			Class.forName(driver);
 			con = (Connection) DriverManager.getConnection(url, userName, userPassword);
 	//		insert();
+			System.out.println("shu ju ku lian jie cheng gong");
 			return true;
 		}
 		catch (ClassNotFoundException e) {
@@ -50,6 +52,60 @@ public class UserDatabase {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public boolean nameExists(String name) {
+		String sql = "select user_name from user_information where user_name = '" + name + "'";
+		PreparedStatement pstmt;
+		try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        ResultSet rset = pstmt.executeQuery();
+	        
+	     /*   while (rset.next()) {
+	        	if (name.equals(rset.getString(1))) {
+	        		return true;
+	        	}
+	        	else {
+	        		return false;
+	        	}
+	        }*/
+	        
+	        if (rset.next()) {
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return false;
+	}
+	
+	public boolean passwordCorrectly(String name, String password) {
+		String sql = "select password from user_information where user_name = '" + name + "'";
+		PreparedStatement pstmt;
+		try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        ResultSet rset = pstmt.executeQuery();
+	        
+	        if (rset.next()) {
+	        	if (rset.getString(1).equals(password)) {
+	        		return true;
+	        	}
+	        	else {
+	        		return false;
+	        	}
+	        }
+	        else {
+	        	return false;
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return false;
 	}
 	
 	/*

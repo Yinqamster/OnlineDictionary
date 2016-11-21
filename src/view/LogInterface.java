@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -132,8 +133,38 @@ public class LogInterface extends JFrame{
 	
 	private void bindLogClickEvent() {
 		jpLog.addActionListener(new ActionListener() {
+			UserDatabase ud = new UserDatabase();
 			public void actionPerformed(ActionEvent e) {
-				//登录后的界面
+				ud.createConnection();
+				//用户名为空   密码为空   用户名不存在  密码不正确
+				String userName = jtfUser.getText();
+				String userPassword = String.valueOf(jpfPassword.getPassword());
+//				System.out.println(userName + userPassword);
+				if (userName.isEmpty()) {
+					LogInterface.this.setVisible(false);
+					new userNameIsEmpty();
+			//		System.out.println("用户名为空");
+				}
+				else if(userPassword.isEmpty()) {
+					LogInterface.this.setVisible(false);
+					new userPasswordIsEmpty();
+		//			System.out.println("密码为空");
+				}
+				else if(!ud.nameExists(userName)) {
+					LogInterface.this.setVisible(false);
+					new userNameNotExists();
+		//			System.out.println("用户名不存在");
+				}
+				else if(ud.nameExists(userName)) {
+					if (ud.passwordCorrectly(userName, userPassword)) {
+						System.out.println("登陆成功");
+					}
+					else {
+						LogInterface.this.setVisible(false);
+						new passwordNotCorrect();
+			//			System.out.println("密码错误");
+					}
+				}
 			}
 		});
 	}
@@ -160,4 +191,117 @@ public class LogInterface extends JFrame{
 		frame.setVisible(true);
 	}
 
+}
+
+
+class userNameIsEmpty extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	public userNameIsEmpty() {
+		this.setTitle("提示");
+		this.setSize(200, 100);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel jlbWrong = new JLabel("    用户名不能为空     ");
+		jlbWrong.setFont(new java.awt.Font("宋体", 0, 17));
+		JButton jbtOK = new JButton("确定");
+		add(jlbWrong);
+		add(jbtOK);
+		
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userNameIsEmpty.this.setVisible(false);
+				new LogInterface();
+			}
+		});
+	}	
+}
+
+
+class userPasswordIsEmpty extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	public userPasswordIsEmpty() {
+		this.setTitle("提示");
+		this.setSize(200, 100);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel jlbWrong = new JLabel("    密码不能为空     ");
+		jlbWrong.setFont(new java.awt.Font("宋体", 0, 17));
+		JButton jbtOK = new JButton("确定");
+		add(jlbWrong);
+		add(jbtOK);
+		
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userPasswordIsEmpty.this.setVisible(false);
+				new LogInterface();
+			}
+		});
+	}	
+}
+
+
+
+class userNameNotExists extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	public userNameNotExists() {
+		this.setTitle("提示");
+		this.setSize(200, 100);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel jlbWrong = new JLabel("    用户名不存在     ");
+		jlbWrong.setFont(new java.awt.Font("宋体", 0, 17));
+		JButton jbtOK = new JButton("确定");
+		add(jlbWrong);
+		add(jbtOK);
+		
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userNameNotExists.this.setVisible(false);
+				new LogInterface();
+			}
+		});
+	}	
+}
+
+
+class passwordNotCorrect extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	public passwordNotCorrect() {
+		this.setTitle("提示");
+		this.setSize(200, 100);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel jlbWrong = new JLabel("      密码错误       ");
+		jlbWrong.setFont(new java.awt.Font("宋体", 0, 17));
+		JButton jbtOK = new JButton("确定");
+		add(jlbWrong);
+		add(jbtOK);
+		
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				passwordNotCorrect.this.setVisible(false);
+				new LogInterface();
+			}
+		});
+	}	
 }

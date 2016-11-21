@@ -63,32 +63,41 @@ public class SignUpInterface extends JFrame{
 		panel.add(jpPw2);
 		panel.add(jpBt);
 		
-		add(panel);
+		add(panel);	
 		
 		jbSign.addActionListener(new ActionListener() {
+			UserDatabase ud = new UserDatabase();
 			public void actionPerformed(ActionEvent e) {
 				String name = jtfName.getText();
 				String password = String.valueOf(jpfPassword.getPassword());
 				String password2 = String.valueOf(jpfPassword2.getPassword());
 				//在数据库查询用户名是否存在
 		//		System.out.println(password + " " + password2);
-				
-				if (password.length() < 6) {
+				ud.createConnection();
+				if (ud.nameExists(name)) {
+					System.out.println("name exists");
 					SignUpInterface.this.setVisible(false);
-					new PasswordShort();
-			//		System.out.println("密码至少为6位");
-				}
-				else if (!password.equals(password2)) {
-					SignUpInterface.this.setVisible(false);
-					new PasswordNotEqual();
-		//			System.out.println("两次密码不一致");
+					new nameExistsWrong();
 				}
 				else {
-					UserDatabase ud = new UserDatabase();
-					ud.createConnection();
-					ud.insert(name, password);
-					SignUpInterface.this.setVisible(false);
-					new SignUpSucceed();
+					System.out.println("ok");
+					if (password.length() < 6) {
+						SignUpInterface.this.setVisible(false);
+						new PasswordShort();
+				//		System.out.println("密码至少为6位");
+					}
+					else if (!password.equals(password2)) {
+						SignUpInterface.this.setVisible(false);
+						new PasswordNotEqual();
+			//			System.out.println("两次密码不一致");
+					}
+					else {
+						
+			//			ud.createConnection();
+						ud.insert(name, password);
+						SignUpInterface.this.setVisible(false);
+						new SignUpSucceed();
+					}
 				}
 			}
 		});
@@ -104,6 +113,7 @@ public class SignUpInterface extends JFrame{
 
 class PasswordShort extends JFrame {
 	private static final long serialVersionUID = 1L;
+	
 	public PasswordShort() {
 		this.setTitle("提示");
 		this.setSize(200, 100);
@@ -125,14 +135,13 @@ class PasswordShort extends JFrame {
 				new SignUpInterface();
 			}
 		});
-	}
-	
-	
+	}	
 }
 
 
 class PasswordNotEqual extends JFrame {
 	private static final long serialVersionUID = 1L;
+	
 	public PasswordNotEqual() {
 		this.setTitle("提示");
 		this.setSize(200, 100);
@@ -154,15 +163,12 @@ class PasswordNotEqual extends JFrame {
 				new SignUpInterface();
 			}
 		});
-	}
-	
-	
+	}	
 }
 
 class SignUpSucceed extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
-	
+		
 	public SignUpSucceed() {
 		this.setTitle("提示");
 		this.setSize(200, 100);
@@ -184,7 +190,33 @@ class SignUpSucceed extends JFrame {
 				new LogInterface();
 			}
 		});
-	}
-	
-	
+	}	
 }
+
+class nameExistsWrong extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	public nameExistsWrong() {
+		this.setTitle("提示");
+		this.setSize(200, 100);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel jlbWrong = new JLabel("      用户名已存在！       ");
+		jlbWrong.setFont(new java.awt.Font("宋体", 0, 17));
+		JButton jbtOK = new JButton("确定");
+		add(jlbWrong);
+		add(jbtOK);
+		
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nameExistsWrong.this.setVisible(false);
+				new SignUpInterface();
+			}
+		});
+	}
+}
+
