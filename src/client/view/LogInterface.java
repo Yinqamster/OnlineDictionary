@@ -1,4 +1,4 @@
-package view;
+package client.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -6,6 +6,12 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,10 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import control.UserDatabase;
-
 public class LogInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
+	
+//	private DataOutputStream toServer;
+//	private DataInputStream fromServer;
+	private BufferedWriter toServer;
+	private BufferedReader fromServer;
 	
 	JTextField jtfUser = new JTextField(10);
 	JPasswordField jpfPassword = new JPasswordField(10);
@@ -47,6 +56,15 @@ public class LogInterface extends JFrame{
 		bindSighUpClickEvent();
 		bindTourOkClickEvent();
 		
+		try {
+			Socket socket = new Socket("localhost", 8000);
+			
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		}
+		catch(IOException ex) {
+			System.out.println(ex);
+		}
 		
 	}
 	
@@ -133,37 +151,46 @@ public class LogInterface extends JFrame{
 	
 	private void bindLogClickEvent() {
 		jpLog.addActionListener(new ActionListener() {
-			UserDatabase ud = new UserDatabase();
 			public void actionPerformed(ActionEvent e) {
-				ud.createConnection();
-				//用户名为空   密码为空   用户名不存在  密码不正确
-				String userName = jtfUser.getText();
-				String userPassword = String.valueOf(jpfPassword.getPassword());
-//				System.out.println(userName + userPassword);
-				if (userName.isEmpty()) {
-					LogInterface.this.setVisible(false);
-					new userNameIsEmpty();
-			//		System.out.println("用户名为空");
-				}
-				else if(userPassword.isEmpty()) {
-					LogInterface.this.setVisible(false);
-					new userPasswordIsEmpty();
-		//			System.out.println("密码为空");
-				}
-				else if(!ud.nameExists(userName)) {
-					LogInterface.this.setVisible(false);
-					new userNameNotExists();
-		//			System.out.println("用户名不存在");
-				}
-				else if(ud.nameExists(userName)) {
-					if (ud.passwordCorrectly(userName, userPassword)) {
-						System.out.println("登陆成功");
+				try {
+					//用户名为空   密码为空   用户名不存在  密码不正确
+					String userName = jtfUser.getText();
+					String userPassword = String.valueOf(jpfPassword.getPassword());
+					
+	//				System.out.println(userName + userPassword);
+					if (userName.isEmpty()) {
+						LogInterface.this.setVisible(false);
+						new userNameIsEmpty();
+				//		System.out.println("用户名为空");
+					}
+					else if(userPassword.isEmpty()) {
+						LogInterface.this.setVisible(false);
+						new userPasswordIsEmpty();
+			//			System.out.println("密码为空");
 					}
 					else {
-						LogInterface.this.setVisible(false);
-						new passwordNotCorrect();
-			//			System.out.println("密码错误");
+						toServer.write("0 " + userName + " " + userPassword + "\n");
+						toServer.flush();
+						int res = Integer.parseInt(fromServer.readLine());
+						if(res == 0) {
+							LogInterface.this.setVisible(false);
+							new userNameNotExists();
+				//			System.out.println("用户名不存在");
+						}
+						else {
+							if (res == 1) {
+								System.out.println("登陆成功");
+							}
+							else if (res == 2) {
+								LogInterface.this.setVisible(false);
+								new passwordNotCorrect();
+					//			System.out.println("密码错误");
+							}
+						}
 					}
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
 				}
 			}
 		});

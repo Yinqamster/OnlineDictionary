@@ -1,4 +1,4 @@
-package control;
+package client.control;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ public class UserDatabase {
 	private final String driver = "com.mysql.jdbc.Driver";
 	private final String url = "jdbc:mysql://localhost:3306/dictionary";
 	private final String userName = "root";
-	private final String userPassword = "";
+	private final String userPassword = "mysql12345";
 	
 //	static int user_id = 0;
 	
@@ -25,7 +25,7 @@ public class UserDatabase {
 			Class.forName(driver);
 			con = (Connection) DriverManager.getConnection(url, userName, userPassword);
 	//		insert();
-			System.out.println("shu ju ku lian jie cheng gong");
+			System.out.println("数据库连接成功");
 			return true;
 		}
 		catch (ClassNotFoundException e) {

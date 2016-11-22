@@ -1,9 +1,11 @@
-package view;
+package client.view;
 
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.Socket;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,10 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import control.UserDatabase;
-
 public class SignUpInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
+	
+//	private DataOutputStream toServer;
+	private BufferedWriter toServer;
+//	private DataInputStream fromServer;
+	private BufferedReader fromServer;
 	
 	
 	public SignUpInterface() {
@@ -66,48 +71,76 @@ public class SignUpInterface extends JFrame{
 		add(panel);	
 		
 		jbSign.addActionListener(new ActionListener() {
-			UserDatabase ud = new UserDatabase();
+			
 			public void actionPerformed(ActionEvent e) {
-				String name = jtfName.getText();
-				String password = String.valueOf(jpfPassword.getPassword());
-				String password2 = String.valueOf(jpfPassword2.getPassword());
-				//在数据库查询用户名是否存在
-		//		System.out.println(password + " " + password2);
-				ud.createConnection();
-				if (ud.nameExists(name)) {
-					System.out.println("name exists");
-					SignUpInterface.this.setVisible(false);
-					new nameExistsWrong();
-				}
-				else {
-					System.out.println("ok");
-					if (password.length() < 6) {
+				try{
+					String name = jtfName.getText();
+					String password = String.valueOf(jpfPassword.getPassword());
+					String password2 = String.valueOf(jpfPassword2.getPassword());
+				//	toServer.wrwriteDouble(5.0);
+//					toServer.writeChars("1 " + name + " " + password + " " + password2);
+					toServer.write("1 " + name + " " + password + " " + password2+"\n");
+					toServer.flush();
+//					int res = fromServer.readInt();
+					int res = Integer.parseInt(fromServer.readLine());
+			//		System.out.println(res);
+					//在数据库查询用户名是否存在
+			//		System.out.println(password + " " + password2);
+			//		while (true) {
+					if (res == 0) {
+		//				System.out.println("name exists");
 						SignUpInterface.this.setVisible(false);
-						new PasswordShort();
-				//		System.out.println("密码至少为6位");
-					}
-					else if (!password.equals(password2)) {
-						SignUpInterface.this.setVisible(false);
-						new PasswordNotEqual();
-			//			System.out.println("两次密码不一致");
+						new nameExistsWrong();
 					}
 					else {
-						
-			//			ud.createConnection();
-						ud.insert(name, password);
-						SignUpInterface.this.setVisible(false);
-						new SignUpSucceed();
+						if (res == 1) {
+						//	toServer.writeBytes(password);
+						//	toServer.flush();
+							SignUpInterface.this.setVisible(false);
+							new PasswordShort();
+					//		System.out.println("密码至少为6位");
+						}
+						else if (res == 2) {
+					//		toServer.writeBytes(password2);
+					//		toServer.flush();
+							SignUpInterface.this.setVisible(false);
+							new PasswordNotEqual();
+				//			System.out.println("两次密码不一致");
+						}
+						else if (res == 3){
+						//	ud.insert(name, password);
+							SignUpInterface.this.setVisible(false);
+							new SignUpSucceed();
+						}
 					}
+			//		}
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
 				}
 			}
 		});
 		
 		jbCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SignUpInterface.this.setVisible(false);
-				new LogInterface();
+				//	toServer.writeBytes("abc");
+					SignUpInterface.this.setVisible(false);
+					new LogInterface();				
 			}
 		});
+		
+		try {
+			Socket socket = new Socket("localhost", 8000);
+			
+//			fromServer = new DataInputStream(socket.getInputStream());
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+//			toServer = new DataOutputStream(socket.getOutputStream());
+			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		}
+		catch(IOException ex) {
+			System.out.println(ex);
+		}
 	}	
 }
 
