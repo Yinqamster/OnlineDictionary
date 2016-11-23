@@ -10,14 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
-/////////////////µ¥´Ê¿¨,Ìí¼Óµ½cardLayoutÖÐ/////////////////////
+/////////////////ï¿½ï¿½ï¿½Ê¿ï¿½,ï¿½ï¿½Óµï¿½cardLayoutï¿½ï¿½/////////////////////
 public class WordCard extends JFrame{
 	Font font=new Font("Microsoft YaHei UI",0,20);
 	
 	public WordCard(String userName,String word,String explanation)
 	{
 		setSize(500,350);
-		setTitle("µ¥´Ê¿¨");
+		setTitle("ï¿½ï¿½ï¿½Ê¿ï¿½");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -35,15 +35,15 @@ public class WordCard extends JFrame{
 		
 		JLabel jtaMeaning=new JLabel("Explanation: "+explanation);
 		jtaMeaning.setFont(font);
-		///setboundsµÄÎ»ÖÃºÃÏñ²»´ó¶Ô£¬ËäÈ»¿´ÆðÀ´Ã»ÎÊÌâ
+		///setboundsï¿½ï¿½Î»ï¿½Ãºï¿½ï¿½ñ²»´ï¿½Ô£ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½
 		jtaMeaning.setBounds(10,20,450,210);;
 		add(jtaMeaning);
 				
 	}
-	//Ö÷º¯ÊýÓÃÀ´²âÊÔ
-	/////////////////ËÆºõ\nºÍ\tµÈ×ªÒå·û¶¼Ã»ÓÐÓÃ//////////////////
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	/////////////////ï¿½Æºï¿½\nï¿½ï¿½\tï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½//////////////////
 	/*public static void main(String[] args)
 	{
-		WordCard card=new WordCard("user","null","Ò»¸ö");
+		WordCard card=new WordCard("user","null","Ò»ï¿½ï¿½");
 	}*/
 }
