@@ -8,29 +8,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-/////////////////////ÓÎ¿Í½çÃæ//////////////////////
+/////////////////////ï¿½Î¿Í½ï¿½ï¿½ï¿½//////////////////////
 public class TouristPage extends JFrame{
+	private static final long serialVersionUID = 1L;
+	
 	private Font font=new Font("Microsoft YaHei UI",0,20);
 	private Font font1=new Font("Microsoft YaHei UI",0,25);
 	private JLabel jlbTitle=new JLabel("Online Dictionary");
 	private JLabel jlbInput=new JLabel("Input");
 	private JTextField jtfInput=new JTextField();
-	private JCheckBox jcBaidu=new JCheckBox("°Ù¶È");
-	private JCheckBox jcYouDao=new JCheckBox("ÓĞµÀ");
-	private JCheckBox jcBing=new JCheckBox("±ØÓ¦");
+	private JCheckBox jcBaidu=new JCheckBox("ç™¾åº¦");
+	private JCheckBox jcYouDao=new JCheckBox("æœ‰é“");
+	private JCheckBox jcBing=new JCheckBox("å¿…åº”");
 	private JButton jbtSearch=new JButton("Search");
-	private JButton jbtTouristLogin=new JButton("µÇÂ¼");
-	private TitledBorder jlbBaiDu=new TitledBorder("°Ù¶È");
+	private JButton jbtTouristLogin=new JButton("ç™»å½•");
+	private TitledBorder jlbBaiDu=new TitledBorder("ç™¾åº¦");
 	private JTextArea jtBaiDu=new JTextArea();
-	private TitledBorder jlbYouDao=new TitledBorder("ÓĞµÀ");
+	private TitledBorder jlbYouDao=new TitledBorder("æœ‰é“");
 	private JTextArea jtYouDao=new JTextArea();
-	private TitledBorder jlbBing=new TitledBorder("±ØÓ¦");
+	private TitledBorder jlbBing=new TitledBorder("å¿…åº”");
 	private JTextArea jtBing=new JTextArea();
 	private client.control.DealAction deal=new client.control.DealAction();
 	
 	public TouristPage()
 	{
-		/////////¿ò¼Ü/////////////////////
+		/////////ï¿½ï¿½ï¿½/////////////////////
 		setSize(800,760);
 		setTitle("Online Dictionary");
 		setLocationRelativeTo(null);
@@ -83,14 +85,16 @@ public class TouristPage extends JFrame{
 		jtBing.setBorder(jlbBing);
 		jtBing.setVisible(false);
 		add(jtBing);
-		/////////////////////ÊÂ¼ş¼àÌı//////////////////
-		//µÇÂ¼µÄÊÂ¼ş¼àÌı
+		/////////////////////ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½//////////////////
+		//ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
 		jbtTouristLogin.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
-	    	///////Ìø»ØµÇÂ¼½çÃæ
+	    	///////ï¿½ï¿½ï¿½Øµï¿½Â¼ï¿½ï¿½ï¿½ï¿½
+	    		TouristPage.this.setVisible(false);
+				new LogInterface();
 	    	}
 	    });
-		//search°´Å¥µÄÊÂ¼ş¼àÌı
+		//searchï¿½ï¿½Å¥ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
 		jbtSearch.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
 	    		String userInput=jtfInput.getText();
@@ -124,7 +128,7 @@ public class TouristPage extends JFrame{
 		});
 		
 	}
-	//Ö÷º¯ÊıÓÃÀ´µ÷ÊÔ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	/*public static void main(String[] args)
 	{
 		TouristPage page=new TouristPage();

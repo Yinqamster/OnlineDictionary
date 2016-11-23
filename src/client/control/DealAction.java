@@ -11,21 +11,21 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.lang.*;
 
-//////////////ÊÂ¼ş´¦Àí/////////////////
+//////////////ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½/////////////////
 public class DealAction {
-	//¼ì²éÊäÈëµ¥´ÊµÄºÏ·¨ĞÔ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ëµ¥ï¿½ÊµÄºÏ·ï¿½ï¿½ï¿½
 	public boolean checkLegality(String str)
 	{
 		Pattern p=Pattern.compile("[a-zA-Z -]+");
 		Matcher m=p.matcher(str);
 		if(!m.matches())
 		{
-			JOptionPane.showMessageDialog(null,"ÊäÈë²»ºÏ·¨£¬ÇëÖØĞÂÊäÈë£¡","Reminder",JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,"è¾“å…¥ä¸åˆæ³•ï¼Œè¯·é‡æ–°è¾“å…¥ï¼","Reminder",JOptionPane.INFORMATION_MESSAGE);
 			return false;
 		}
 		return true;
 	}
-	//´Ó°Ù¶È»ñÈ¡ĞÅÏ¢
+	//ï¿½Ó°Ù¶È»ï¿½È¡ï¿½ï¿½Ï¢
 	public String getMeaningFromBaiDu(String text)
 	{
 		text=text.replace(' ', '+');
@@ -41,10 +41,10 @@ public class DealAction {
 		}
 		meaning=getExplanation(path,1);
 		//meaning=getPageInfo(path);
-		//////////////////´ı»ñÈ¡Ò³ÃæÄÚÈİ²¢½âÎö//////////////////
+		//////////////////ï¿½ï¿½ï¿½ï¿½È¡Ò³ï¿½ï¿½ï¿½ï¿½ï¿½İ²ï¿½ï¿½ï¿½ï¿½ï¿½//////////////////
 		return meaning;
 	}
-	//´Óbing»ñÈ¡ĞÅÏ¢
+	//ï¿½ï¿½bingï¿½ï¿½È¡ï¿½ï¿½Ï¢
 	public String getMeaningFromBing(String text)
 	{
 		text=text.replace(' ','+');
@@ -59,10 +59,10 @@ public class DealAction {
 			ex.printStackTrace();
 		}
 		meaning=getExplanation(path,3);
-		//////////////////´ı»ñÈ¡Ò³ÃæÄÚÈİ²¢½âÎö//////////////////
+		//////////////////ï¿½ï¿½ï¿½ï¿½È¡Ò³ï¿½ï¿½ï¿½ï¿½ï¿½İ²ï¿½ï¿½ï¿½ï¿½ï¿½//////////////////
 		return meaning;
 	}
-	//´ÓÓĞµÀ»ñÈ¡ĞÅÏ¢
+	//ï¿½ï¿½ï¿½Ğµï¿½ï¿½ï¿½È¡ï¿½ï¿½Ï¢
 	public String getMeaningFromYouDao(String text)
 	{
 		text=text.replace(" ", "%20");
@@ -77,7 +77,7 @@ public class DealAction {
 			ex.printStackTrace();
 		}
 		meaning=getExplanation(path,2);
-		//////////////////´ı»ñÈ¡Ò³ÃæÄÚÈİ²¢½âÎö//////////////////
+		//////////////////ï¿½ï¿½ï¿½ï¿½È¡Ò³ï¿½ï¿½ï¿½ï¿½ï¿½İ²ï¿½ï¿½ï¿½ï¿½ï¿½//////////////////
 		return meaning;
 	}
 	
@@ -108,7 +108,7 @@ public class DealAction {
 		//pageInfo="here";
 		return pageInfo;
 	}
-	//°Ù¶È1£¬ÓĞµÀ2£¬bing3
+	//ï¿½Ù¶ï¿½1ï¿½ï¿½ï¿½Ğµï¿½2ï¿½ï¿½bing3
 	private String getExplanation(String path,int type)
 	{
 		String pageInfo=getPageInfo(path);
@@ -118,7 +118,7 @@ public class DealAction {
 		{
 		case 1:{
 			index=pageInfo.indexOf("<div><p><strong>art.</strong><span>");
-			while(pageInfo.charAt(index)!='Ò×')
+			while(pageInfo.charAt(index)!='æ˜“')
 			{
 				explanation+=pageInfo.charAt(index);
 				index++;
@@ -126,13 +126,13 @@ public class DealAction {
 			index=0;
 		}break;
 		case 3:{
-			index=pageInfo.indexOf("±ØÓ¦´ÊµäÎªÄúÌá¹©");
+			index=pageInfo.indexOf("å¿…åº”è¯å…¸ä¸ºæ‚¨æä¾›");
 			while(pageInfo.charAt(index)!='\"')
 			{
 				explanation+=pageInfo.charAt(index);
 				index++;
 			}
-			//////////////////////ËÆºõÃ»°ì·¨ÏìÓ¦\n
+			//////////////////////ï¿½Æºï¿½Ã»ï¿½ì·¨ï¿½ï¿½Ó¦\n
 			index=0;
 			explanation.replace(';', '\n');
 		}break;

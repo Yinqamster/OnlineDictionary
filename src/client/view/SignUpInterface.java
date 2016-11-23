@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -90,27 +91,35 @@ public class SignUpInterface extends JFrame{
 					if (res == 0) {
 		//				System.out.println("name exists");
 						SignUpInterface.this.setVisible(false);
-						new nameExistsWrong();
+						JOptionPane.showMessageDialog(null,"用户名已存在！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						new SignUpInterface();
+				//		new nameExistsWrong();
 					}
 					else {
 						if (res == 1) {
 						//	toServer.writeBytes(password);
 						//	toServer.flush();
 							SignUpInterface.this.setVisible(false);
-							new PasswordShort();
+							JOptionPane.showMessageDialog(null,"密码至少为6位！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							new SignUpInterface();
+					//		new PasswordShort();
 					//		System.out.println("密码至少为6位");
 						}
 						else if (res == 2) {
 					//		toServer.writeBytes(password2);
 					//		toServer.flush();
 							SignUpInterface.this.setVisible(false);
-							new PasswordNotEqual();
+							JOptionPane.showMessageDialog(null,"两次输入密码不一致！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							new SignUpInterface();
+					//		new PasswordNotEqual();
 				//			System.out.println("两次密码不一致");
 						}
 						else if (res == 3){
 						//	ud.insert(name, password);
 							SignUpInterface.this.setVisible(false);
-							new SignUpSucceed();
+							JOptionPane.showMessageDialog(null, "                              注册成功！", "Reminder",JOptionPane.PLAIN_MESSAGE);
+							new LogInterface();
+						//	new SignUpSucceed();
 						}
 					}
 			//		}
@@ -144,6 +153,7 @@ public class SignUpInterface extends JFrame{
 	}	
 }
 
+/*
 class PasswordShort extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
@@ -226,6 +236,7 @@ class SignUpSucceed extends JFrame {
 	}	
 }
 
+/*
 class nameExistsWrong extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
@@ -251,5 +262,5 @@ class nameExistsWrong extends JFrame {
 			}
 		});
 	}
-}
+}*/
 

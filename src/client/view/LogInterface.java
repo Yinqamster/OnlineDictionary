@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -160,12 +161,15 @@ public class LogInterface extends JFrame{
 	//				System.out.println(userName + userPassword);
 					if (userName.isEmpty()) {
 						LogInterface.this.setVisible(false);
-						new userNameIsEmpty();
+						JOptionPane.showMessageDialog(null,"用户名不能为空！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						new LogInterface();
 				//		System.out.println("用户名为空");
 					}
 					else if(userPassword.isEmpty()) {
 						LogInterface.this.setVisible(false);
-						new userPasswordIsEmpty();
+						JOptionPane.showMessageDialog(null,"密码不能为空！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						new LogInterface();
+			//			new userPasswordIsEmpty();
 			//			System.out.println("密码为空");
 					}
 					else {
@@ -174,16 +178,21 @@ public class LogInterface extends JFrame{
 						int res = Integer.parseInt(fromServer.readLine());
 						if(res == 0) {
 							LogInterface.this.setVisible(false);
-							new userNameNotExists();
+							JOptionPane.showMessageDialog(null,"用户名不存在！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							new LogInterface();
+					//		new userNameNotExists();
 				//			System.out.println("用户名不存在");
 						}
 						else {
 							if (res == 1) {
 								System.out.println("登陆成功");
+								
 							}
 							else if (res == 2) {
 								LogInterface.this.setVisible(false);
-								new passwordNotCorrect();
+								JOptionPane.showMessageDialog(null,"密码错误！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+								new LogInterface();
+				//				new passwordNotCorrect();
 					//			System.out.println("密码错误");
 							}
 						}
@@ -207,6 +216,12 @@ public class LogInterface extends JFrame{
 	
 	private void bindTourOkClickEvent() {
 		//游客界面
+		jbtTourOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LogInterface.this.setVisible(false);
+				new TouristPage();
+			}
+		});
 	}
 	
 	public static void main(String args[]) {
@@ -220,11 +235,12 @@ public class LogInterface extends JFrame{
 
 }
 
-
+/*
 class userNameIsEmpty extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	public userNameIsEmpty() {
+		
 		this.setTitle("提示");
 		this.setSize(200, 100);
 		this.setLocationRelativeTo(null);
@@ -331,4 +347,4 @@ class passwordNotCorrect extends JFrame {
 			}
 		});
 	}	
-}
+}*/
