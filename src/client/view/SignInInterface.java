@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class SignUpInterface extends JFrame{
+public class SignInInterface extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 //	private DataOutputStream toServer;
@@ -25,12 +25,12 @@ public class SignUpInterface extends JFrame{
 	private BufferedReader fromServer;
 	
 	
-	public SignUpInterface() {
+	public SignInInterface() {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
         
-		this.setTitle("注册");
+		this.setTitle("Sign In");
 		this.setSize(300, 300);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,30 +38,30 @@ public class SignUpInterface extends JFrame{
 		
 		JPanel jpName = new JPanel();
 		jpName.setLayout(new BoxLayout(jpName, BoxLayout.X_AXIS));
-		JLabel jlbName = new JLabel("昵称           ");
+		JLabel jlbName = new JLabel("Name                          ");
 		jpName.add(jlbName);
 		JTextField jtfName = new JTextField(10);
 		jpName.add(jtfName);
 		
 		JPanel jpPw = new JPanel();
 		jpPw.setLayout(new BoxLayout(jpPw, BoxLayout.X_AXIS));
-		JLabel jlbPassword = new JLabel("设置密码  ");
+		JLabel jlbPassword = new JLabel("Password                  ");
 		jpPw.add(jlbPassword);
 		JPasswordField jpfPassword = new JPasswordField(10);
 		jpPw.add(jpfPassword);
 		
 		JPanel jpPw2 = new JPanel();
 		jpPw2.setLayout(new BoxLayout(jpPw2, BoxLayout.X_AXIS));
-		JLabel jlbPassword2 = new JLabel("确认密码  ");
+		JLabel jlbPassword2 = new JLabel("Re-enter Password ");
 		jpPw2.add(jlbPassword2);
 		JPasswordField jpfPassword2 = new JPasswordField(10);
 		jpPw2.add(jpfPassword2);
 		
 		JPanel jpBt = new JPanel();
 		jpBt.setLayout(new BoxLayout(jpBt, BoxLayout.X_AXIS));
-		JButton jbSign = new JButton("注册");
+		JButton jbSign = new JButton("Sign In");
 		jpBt.add(jbSign);
-		JButton jbCancel = new JButton("取消");
+		JButton jbCancel = new JButton("Cancel");
 		jpBt.add(jbCancel);
 		
 		panel.add(jpName);
@@ -90,34 +90,34 @@ public class SignUpInterface extends JFrame{
 			//		while (true) {
 					if (res == 0) {
 		//				System.out.println("name exists");
-						SignUpInterface.this.setVisible(false);
-						JOptionPane.showMessageDialog(null,"用户名已存在！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-						new SignUpInterface();
+						SignInInterface.this.setVisible(false);
+						JOptionPane.showMessageDialog(null,"User name already exists！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						new SignInInterface();
 				//		new nameExistsWrong();
 					}
 					else {
 						if (res == 1) {
 						//	toServer.writeBytes(password);
 						//	toServer.flush();
-							SignUpInterface.this.setVisible(false);
-							JOptionPane.showMessageDialog(null,"密码至少为6位！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-							new SignUpInterface();
+							SignInInterface.this.setVisible(false);
+							JOptionPane.showMessageDialog(null,"Password must be at least 6 characters！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							new SignInInterface();
 					//		new PasswordShort();
 					//		System.out.println("密码至少为6位");
 						}
 						else if (res == 2) {
 					//		toServer.writeBytes(password2);
 					//		toServer.flush();
-							SignUpInterface.this.setVisible(false);
-							JOptionPane.showMessageDialog(null,"两次输入密码不一致！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-							new SignUpInterface();
+							SignInInterface.this.setVisible(false);
+							JOptionPane.showMessageDialog(null,"The passwords you typed do not match！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							new SignInInterface();
 					//		new PasswordNotEqual();
 				//			System.out.println("两次密码不一致");
 						}
 						else if (res == 3){
 						//	ud.insert(name, password);
-							SignUpInterface.this.setVisible(false);
-							JOptionPane.showMessageDialog(null, "                              注册成功！", "Reminder",JOptionPane.PLAIN_MESSAGE);
+							SignInInterface.this.setVisible(false);
+							JOptionPane.showMessageDialog(null, "                    Sign In Successfully！", "Reminder",JOptionPane.PLAIN_MESSAGE);
 							new LogInterface();
 						//	new SignUpSucceed();
 						}
@@ -133,12 +133,13 @@ public class SignUpInterface extends JFrame{
 		jbCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//	toServer.writeBytes("abc");
-					SignUpInterface.this.setVisible(false);
+					SignInInterface.this.setVisible(false);
 					new LogInterface();				
 			}
 		});
 		
 		try {
+//			@SuppressWarnings("resource")
 			Socket socket = new Socket("localhost", 8000);
 			
 //			fromServer = new DataInputStream(socket.getInputStream());
@@ -149,6 +150,7 @@ public class SignUpInterface extends JFrame{
 		}
 		catch(IOException ex) {
 			System.out.println(ex);
+			
 		}
 	}	
 }

@@ -32,8 +32,8 @@ public class LogInterface extends JFrame{
 	
 	JTextField jtfUser = new JTextField(10);
 	JPasswordField jpfPassword = new JPasswordField(10);
-	JButton jpLog = new JButton("登录");
-	JButton jpSignUp = new JButton("注册");
+	JButton jpLog = new JButton("Log In");
+	JButton jpSignIn = new JButton("Sign In");
 	JButton jbtTourOk = new JButton("Go");
 	
 	public LogInterface() {
@@ -75,8 +75,8 @@ public class LogInterface extends JFrame{
 		
 		JPanel jpUserPane = new JPanel();
 		jpUserPane.setPreferredSize(new Dimension(110, 60));
-		JLabel jlbUser = new JLabel("用户名:");
-		jlbUser.setFont(new java.awt.Font("宋体", 1, 15));
+		JLabel jlbUser = new JLabel("User Name:");
+		jlbUser.setFont(new java.awt.Font("", 1, 15));
 		jlbUser.setPreferredSize(new Dimension(110,30));
 		jpUserPane.add(jlbUser);
 	//	JTextField jtfUser = new JTextField(10);
@@ -85,8 +85,8 @@ public class LogInterface extends JFrame{
 		
 		JPanel jpPasswordPane = new JPanel();
 		jpPasswordPane.setPreferredSize(new Dimension(110, 60));
-		JLabel jlbPassword = new JLabel("密码:");
-		jlbPassword.setFont(new java.awt.Font("宋体", 1, 15));
+		JLabel jlbPassword = new JLabel("Password:");
+		jlbPassword.setFont(new java.awt.Font("", 1, 15));
 		jlbPassword.setPreferredSize(new Dimension(110, 30));
 		jpPasswordPane.add(jlbPassword);
 //		JPasswordField jpfPassword = new JPasswordField(10);
@@ -98,7 +98,7 @@ public class LogInterface extends JFrame{
 //		JButton jpLog = new JButton("登录");
 		jpSignPane.add(jpLog);
 //		JButton jpSignUp = new JButton("注册");
-		jpSignPane.add(jpSignUp);
+		jpSignPane.add(jpSignIn);
 		
 		jpLogPane.add(jpUserPane, BorderLayout.NORTH);
 		jpLogPane.add(jpPasswordPane, BorderLayout.CENTER);
@@ -114,8 +114,8 @@ public class LogInterface extends JFrame{
 		
 		JPanel jpTitlePane = new JPanel();
 		
-		JLabel jlbTitle = new JLabel("在线词典");
-		jlbTitle.setFont(new java.awt.Font("楷体", 1, 40));
+		JLabel jlbTitle = new JLabel("Online Dictionary");
+		jlbTitle.setFont(new java.awt.Font("", 1, 20));
 		jpTitlePane.add(jlbTitle);
 				
 		ImageIcon img = new ImageIcon("字典.png");
@@ -126,18 +126,18 @@ public class LogInterface extends JFrame{
 		
 		JPanel jpTextPane = new JPanel();
 	//	jpTextPane.setLayout(new BorderLayout(5, 5));
-		JLabel jlbText0 = new JLabel("说明：");
+		JLabel jlbText0 = new JLabel("Instruction：");
 		jlbText0.setFont(new java.awt.Font("宋体", 0, 18));
-		JLabel jlbText1 = new JLabel("本词典支持百度、有道、必应查词");
-		jlbText1.setFont(new java.awt.Font("宋体", 0, 18));
-		JLabel jlbText2 = new JLabel("在右侧登录，新用户请先注册");
-		jlbText2.setFont(new java.awt.Font("宋体", 0, 18));
+		JLabel jlbText1 = new JLabel("Search from Baidu, YouDao, Bing Dictionary");
+		jlbText1.setFont(new java.awt.Font("宋体", 0, 13));
+		JLabel jlbText2 = new JLabel("New users please register");
+		jlbText2.setFont(new java.awt.Font("宋体", 0, 13));
 		jpTextPane.add(jlbText0, BorderLayout.NORTH);
 		jpTextPane.add(jlbText1, BorderLayout.CENTER);
 		jpTextPane.add(jlbText2, BorderLayout.SOUTH);
 		
 		JPanel jpTourPane = new JPanel();
-		JLabel jlbText3 = new JLabel("进入访客模式");
+		JLabel jlbText3 = new JLabel("Enter visitor mode");
 		jlbText3.setFont(new java.awt.Font("宋体", 0, 18));
 //		JButton jbtTourOk = new JButton("Go");
 		jbtTourOk.setFont(new java.awt.Font("宋体", 0, 10));
@@ -161,13 +161,13 @@ public class LogInterface extends JFrame{
 	//				System.out.println(userName + userPassword);
 					if (userName.isEmpty()) {
 						LogInterface.this.setVisible(false);
-						JOptionPane.showMessageDialog(null,"用户名不能为空！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null,"User name cannot be empty！","Reminder",JOptionPane.INFORMATION_MESSAGE);
 						new LogInterface();
 				//		System.out.println("用户名为空");
 					}
 					else if(userPassword.isEmpty()) {
 						LogInterface.this.setVisible(false);
-						JOptionPane.showMessageDialog(null,"密码不能为空！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Password can not be empty！","Reminder",JOptionPane.INFORMATION_MESSAGE);
 						new LogInterface();
 			//			new userPasswordIsEmpty();
 			//			System.out.println("密码为空");
@@ -178,19 +178,19 @@ public class LogInterface extends JFrame{
 						int res = Integer.parseInt(fromServer.readLine());
 						if(res == 0) {
 							LogInterface.this.setVisible(false);
-							JOptionPane.showMessageDialog(null,"用户名不存在！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null,"User name does not exist！","Reminder",JOptionPane.INFORMATION_MESSAGE);
 							new LogInterface();
 					//		new userNameNotExists();
 				//			System.out.println("用户名不存在");
 						}
 						else {
 							if (res == 1) {
-								System.out.println("登陆成功");
+								System.out.println("Login Successful");
 								
 							}
 							else if (res == 2) {
 								LogInterface.this.setVisible(false);
-								JOptionPane.showMessageDialog(null,"密码错误！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null,"Password Error！","Reminder",JOptionPane.INFORMATION_MESSAGE);
 								new LogInterface();
 				//				new passwordNotCorrect();
 					//			System.out.println("密码错误");
@@ -206,10 +206,10 @@ public class LogInterface extends JFrame{
 	}
 	
 	private void bindSighUpClickEvent() {
-		jpSignUp.addActionListener(new ActionListener() {
+		jpSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LogInterface.this.setVisible(false);
-				new SignUpInterface();
+				new SignInInterface();
 			}
 		});
 	}
