@@ -1,8 +1,13 @@
 package client.control;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.swing.*;
+
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.net.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,133 +15,172 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.lang.*;
+import java.util.List;
 
-//////////////�¼�����/////////////////
+import org.apache.http.HttpEntity;  
+import org.apache.http.HttpResponse;  
+import org.apache.http.client.ClientProtocolException;  
+import org.apache.http.client.HttpClient;  
+import org.apache.http.client.methods.HttpGet;  
+import org.apache.http.util.EntityUtils;  
+import org.apache.http.impl.client.DefaultHttpClient;  
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
+import com.memetix.mst.language.Language;  
+import com.memetix.mst.translate.Translate;  
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+//////////////锟铰硷拷锟斤拷锟斤拷/////////////////
 public class DealAction {
-	//������뵥�ʵĺϷ���
+	
+	String word=null;
+	boolean b=true;
+	HttpClient client=new DefaultHttpClient();
+	private static final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+            'e', 'f' };
+	//check whether the input is legal
 	public boolean checkLegality(String str)
 	{
 		Pattern p=Pattern.compile("[a-zA-Z -]+");
 		Matcher m=p.matcher(str);
 		if(!m.matches())
 		{
-			JOptionPane.showMessageDialog(null,"输入不合法，请重新输入！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Input Wrong!","Reminder",JOptionPane.INFORMATION_MESSAGE);
 			return false;
 		}
 		return true;
 	}
-	//�ӰٶȻ�ȡ��Ϣ
-	public String getMeaningFromBaiDu(String text)
+	
+	//byte to hex
+	private static String byteArrayToHex(byte[] byteArray) {
+        char[] resultCharArray = new char[byteArray.length * 2];
+        int index = 0;
+        for (byte b : byteArray) {
+            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b & 0xf];
+        }
+        return new String(resultCharArray);
+
+    }
+	//md5
+	 public static String md5(String input) throws UnsupportedEncodingException {
+	        if (input == null)
+	            return null;
+
+	        try {
+	            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+	            byte[] inputByteArray = input.getBytes("utf-8");
+	            messageDigest.update(inputByteArray);
+	            byte[] resultByteArray = messageDigest.digest();
+	            return byteArrayToHex(resultByteArray);
+	        } catch (NoSuchAlgorithmException e) {
+	            return null;
+	        }
+	    }
+
+	//get  meaning from baidu
+	public String getMeaningFromBaiDu(String word)
 	{
-		text=text.replace(' ', '+');
-		String meaning;
-		String path=null;
-		try{
-			path="http://dict.baidu.com/s?wd=";
-			path+=URLEncoder.encode(text,"UTF-8");
+		String retr=null;
+		//String url="http://api.fanyi.baidu.com/api/trans/vip/translate?q="+word+"&from=zh&to=en&appid=20160413000018571&salt=1435660288&sign=39c436658c2f20730931b5139094c0a7";
+		//String TRANS_API_HOST = "http://api.fanyi.baidu.com/api/trans/vip/translate";
+		String appid="20161205000033481";
+		String securityKey="MubEL_Y3Sjwk3F4flv4h";
+		String salt = String.valueOf(11111);
+        String src = appid + word + salt + securityKey; 
+        String sign=null;
+		try {
+			sign = md5(src);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		catch(UnsupportedEncodingException ex)
-		{
-			ex.printStackTrace();
-		}
-		meaning=getExplanation(path,1);
-		//meaning=getPageInfo(path);
-		//////////////////����ȡҳ�����ݲ�����//////////////////
-		return meaning;
+        String url="http://api.fanyi.baidu.com/api/trans/vip/translate?q="+word+"&from=en&to=zh&appid=20161205000033481&salt="+salt+"&sign="+sign;
+        //Element paragraph = null;
+        HttpGet get = new HttpGet(url);
+        try{
+        	HttpResponse response = client.execute(get);
+        	HttpEntity entity = response.getEntity();
+        	InputStream returnStream = entity.getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(returnStream,"UTF-8"));
+            StringBuilder result = new StringBuilder();
+            String str = null;
+            while ((str = reader.readLine()) != null) {
+                result.append(str).append("\n");
+            }
+            try {
+				JSONObject resultJson = new JSONObject(result.toString());
+				 JSONArray array = (JSONArray) resultJson.get("trans_result");
+			     JSONObject dst = (JSONObject) array.get(0);
+			     retr = dst.getString("dst");
+			     retr = URLDecoder.decode(retr,"UTF-8");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+            //JSONObject resultJson = new JSONObject(result.toString());
+        catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+        return retr;
 	}
-	//��bing��ȡ��Ϣ
-	public String getMeaningFromBing(String text)
+
+	//get meaning from bing
+	public String getMeaningFromBing(String word)
 	{
-		text=text.replace(' ','+');
-		String meaning;
-		String path=null;
-		try{
-			path="http://cn.bing.com/dict/search?q=";
-			path+=URLEncoder.encode(text,"UTF-8");
-		}
-		catch(UnsupportedEncodingException ex)
-		{
-			ex.printStackTrace();
-		}
-		meaning=getExplanation(path,3);
-		//////////////////����ȡҳ�����ݲ�����//////////////////
-		return meaning;
-	}
-	//���е���ȡ��Ϣ
-	public String getMeaningFromYouDao(String text)
-	{
-		text=text.replace(" ", "%20");
-		String meaning;
-		String path=null;
-		try{
-			path += "http://dict.youdao.com/w/";
-			path += URLEncoder.encode(text,"UTF-8");
-		}
-		catch(UnsupportedEncodingException ex)
-		{
-			ex.printStackTrace();
-		}
-		meaning=getExplanation(path,2);
-		//////////////////����ȡҳ�����ݲ�����//////////////////
-		return meaning;
+		Translate.setClientId("1ef3d644-5a79-433f-ad59-1a042b76ddda");
+		Translate.setClientSecret("Z13DcWtKcLNTtKEWL+XIP81WUqxF01wcQOgGYDW8MSI");
+		String translatedText=null;
+		try {
+			translatedText = Translate.execute(word, Language.ENGLISH, Language.CHINESE_SIMPLIFIED);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		return translatedText;
 	}
 	
-	private String getPageInfo(String path)
+	//get meaning from youdao
+	public String getMeaningFromYouDao(String word)
 	{
-		String pageInfo=null;
-		URL url=null;
-		BufferedReader input = null;
+		Element paragraph = null;
+		HttpGet get = new HttpGet(
+				"http://fanyi.youdao.com/openapi.do?keyfrom=youdao111&key=60638690&type=data&doctype=xml&version=1.1&q="
+						+ word);
 		try{
-			url=new URL(path);
-			input=new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-			StringBuilder tmpPage = new StringBuilder();
-			String tmpLine = new String();
-			while((tmpLine=input.readLine())!= null){
-				tmpPage.append(tmpLine+"\n");
+			HttpResponse response = client.execute(get);
+			HttpEntity entity = response.getEntity();
+			String str = EntityUtils.toString(entity, "UTF-8");
+			org.dom4j.Document doc = (org.dom4j.Document) DocumentHelper
+					.parseText(str);
+			Element root = (Element) doc.getRootElement();
+			Element query = root.element("query");
+			List clist = root.elements();
+			//System.out.println("原文:" + query.getText());
+			paragraph = (Element) root.element("translation")
+					.element("paragraph");
+			
+			//System.out.println("翻译:" + paragraph.getText());
 			}
-			pageInfo=tmpPage.toString();
-			input.close();
+		catch (ClientProtocolException e) {
+			b = false;
+			e.printStackTrace();
+		} catch (IOException e) {
+			b = false;
+			e.printStackTrace();
+		} catch (DocumentException e1) {
+			b = false;
+			e1.printStackTrace();
 		}
-		catch(MalformedURLException ex)
-		{
-			pageInfo="URL not found";
-		}
-		catch(IOException e)
-		{
-			pageInfo=e.getMessage();
-		}
-		//pageInfo="here";
-		return pageInfo;
-	}
-	//�ٶ�1���е�2��bing3
-	private String getExplanation(String path,int type)
-	{
-		String pageInfo=getPageInfo(path);
-		String explanation=" ";
-		int index=0;
-		switch(type)
-		{
-		case 1:{
-			index=pageInfo.indexOf("<div><p><strong>art.</strong><span>");
-			while(pageInfo.charAt(index)!='易')
-			{
-				explanation+=pageInfo.charAt(index);
-				index++;
-			}
-			index=0;
-		}break;
-		case 3:{
-			index=pageInfo.indexOf("必应词典为您提供");
-			while(pageInfo.charAt(index)!='\"')
-			{
-				explanation+=pageInfo.charAt(index);
-				index++;
-			}
-			//////////////////////�ƺ�û�취��Ӧ\n
-			index=0;
-			explanation.replace(';', '\n');
-		}break;
-		}
-		return explanation;
+		return paragraph.getText();
 	}
 }
+	

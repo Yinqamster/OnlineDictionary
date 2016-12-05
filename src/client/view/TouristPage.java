@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-/////////////////////�οͽ���//////////////////////
+/////////////////////锟轿客斤拷锟斤拷//////////////////////
 public class TouristPage extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
@@ -17,22 +17,22 @@ public class TouristPage extends JFrame{
 	private JLabel jlbTitle=new JLabel("Online Dictionary");
 	private JLabel jlbInput=new JLabel("Input");
 	private JTextField jtfInput=new JTextField();
-	private JCheckBox jcBaidu=new JCheckBox("百度");
-	private JCheckBox jcYouDao=new JCheckBox("有道");
-	private JCheckBox jcBing=new JCheckBox("必应");
+	private JCheckBox jcBaidu=new JCheckBox("鐧惧害");
+	private JCheckBox jcYouDao=new JCheckBox("鏈夐亾");
+	private JCheckBox jcBing=new JCheckBox("蹇呭簲");
 	private JButton jbtSearch=new JButton("Search");
-	private JButton jbtTouristLogin=new JButton("登录");
-	private TitledBorder jlbBaiDu=new TitledBorder("百度");
+	private JButton jbtTouristLogin=new JButton("鐧诲綍");
+	private TitledBorder jlbBaiDu=new TitledBorder("鐧惧害");
 	private JTextArea jtBaiDu=new JTextArea();
-	private TitledBorder jlbYouDao=new TitledBorder("有道");
+	private TitledBorder jlbYouDao=new TitledBorder("鏈夐亾");
 	private JTextArea jtYouDao=new JTextArea();
-	private TitledBorder jlbBing=new TitledBorder("必应");
+	private TitledBorder jlbBing=new TitledBorder("蹇呭簲");
 	private JTextArea jtBing=new JTextArea();
 	private client.control.DealAction deal=new client.control.DealAction();
 	
 	public TouristPage()
 	{
-		/////////���/////////////////////
+		/////////锟斤拷锟�/////////////////////
 		setSize(800,760);
 		setTitle("Online Dictionary");
 		setLocationRelativeTo(null);
@@ -85,16 +85,16 @@ public class TouristPage extends JFrame{
 		jtBing.setBorder(jlbBing);
 		jtBing.setVisible(false);
 		add(jtBing);
-		/////////////////////�¼�����//////////////////
-		//��¼���¼�����
+		/////////////////////锟铰硷拷锟斤拷锟斤拷//////////////////
+		//锟斤拷录锟斤拷锟铰硷拷锟斤拷锟斤拷
 		jbtTouristLogin.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
-	    	///////���ص�¼����
+	    	///////锟斤拷锟截碉拷录锟斤拷锟斤拷
 	    		TouristPage.this.setVisible(false);
 				new LogInterface();
 	    	}
 	    });
-		//search��ť���¼�����
+		//search锟斤拷钮锟斤拷锟铰硷拷锟斤拷锟斤拷
 		jbtSearch.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
 	    		String userInput=jtfInput.getText();
@@ -103,22 +103,24 @@ public class TouristPage extends JFrame{
 	    		boolean bingSelected=jcBing.isSelected();
 	    		if(deal.checkLegality(userInput))
 	    		{
+	    			String meaning=null;
 	    			if(baiduSelected)
 	    			{
-	    				String meaning=deal.getMeaningFromBaiDu(userInput);
+	    				//String meaning;
+						meaning = deal.getMeaningFromBaiDu(userInput);
 	    				jtBaiDu.setText(meaning);
 	    				jtBaiDu.setVisible(true);
 	    				
 	    			}
 	    			if(youDaoSelected)
 	    			{
-	    				String meaning=deal.getMeaningFromYouDao(userInput);
+	    				meaning=deal.getMeaningFromYouDao(userInput);
 	    				jtYouDao.setText(meaning);
 	    				jtYouDao.setVisible(true);
 	    			}
 	    			if(bingSelected)
 	    			{
-	    				String meaning=deal.getMeaningFromBing(userInput);
+	    				meaning=deal.getMeaningFromBing(userInput);
 	    				jtBing.setText(meaning);
 	    				jtBing.setVisible(true);
 	    			}
@@ -128,9 +130,9 @@ public class TouristPage extends JFrame{
 		});
 		
 	}
-	//��������������
-	/*public static void main(String[] args)
+	//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+	public static void main(String[] args)
 	{
 		TouristPage page=new TouristPage();
-	}*/
+	}
 }
