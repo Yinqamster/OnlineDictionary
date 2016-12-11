@@ -54,6 +54,19 @@ public class UserDatabase {
 	    }
 	}
 	
+	public void setState(String name) {
+		String sql = "update user_information set state = 1 where user_name = " + "'" + name + "'";
+	    PreparedStatement pstmt;
+	    try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+	//        con.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	public boolean nameExists(String name) {
 		String sql = "select user_name from user_information where user_name = '" + name + "'";
 		PreparedStatement pstmt;
@@ -114,25 +127,41 @@ public class UserDatabase {
 		ud.createConnection();
 		ud.insert();
 	}*/
-	public String[] getOnlineuser()
-	{
-		String[] s1={"11","22","33","4","5","6","7","6","4","4","r4","423","43","3","324","weqr","wer","s","d","sd","s"
-				,"s","sa","sf","ds","ds","sdfg"};
-		return s1;
+	public String getOnlineUser() {
+		String sql = "select user_name from user_information where state = 1";
+	    PreparedStatement pstmt;
+	    String user = "";
+	    try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        ResultSet rset = pstmt.executeQuery();
+             
+	        while (rset.next()) {
+	        	user = user + rset.getString(1) + " ";
+	        }
+	//        System.out.println(user);
+	        pstmt.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return user;
 	}
-	public String[] getOfflineuser()
-	{
-		String[] s1={"11","22","33"};
-		return s1;
-	}
-	public String[] getOnlinefriends()
-	{
-		String[] s1={"11","22","33"};
-		return s1;
-	}
-	public String[] getofflinefriends()
-	{
-		String[] s1={"11","22","33"};
-		return s1;
+	
+	public String getOfflineUser() {
+		String sql = "select user_name from user_information where state = 0";
+	    PreparedStatement pstmt;
+	    String user = "";
+	    try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        ResultSet rset = pstmt.executeQuery();
+             
+	        while (rset.next()) {
+	        	user = user + rset.getString(1) + " ";
+	        }
+	//        System.out.println(user);
+	        pstmt.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return user;
 	}
 }
