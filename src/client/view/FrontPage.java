@@ -73,9 +73,9 @@ public class FrontPage extends JFrame{
 	JMenuItem helpMenu=new JMenuItem("Help");
 	JMenuItem logoutItem=new JMenuItem("Log out");
 	JMenuItem onlineUser=new JMenuItem("Online Users");
-	JMenuItem addFriends=new JMenuItem("Add friends");
-	JMenuItem onlineFriends=new JMenuItem("Online Friends");
-	JMenuItem offlineFriends=new JMenuItem("Offline Friends");
+	//JMenuItem addFriends=new JMenuItem("Add friends");
+	//JMenuItem onlineFriends=new JMenuItem("Online Friends");
+	//JMenuItem offlineFriends=new JMenuItem("Offline Friends");
 	JMenuItem makeCard=new JMenuItem("Generate word card");
 	//JMenuItem sendCard=new JMenuItem("Send word card");
 	///////////////////�����ݿ��ȡ���޸���/////////////////////
@@ -87,12 +87,18 @@ public class FrontPage extends JFrame{
 	{
 		ImageIcon img = new ImageIcon("like.jpg");
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		ImageIcon imgyoudao = new ImageIcon("youdao.jpg");
-		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		
+		ImageIcon imgyoudao = new ImageIcon("youdao.png");
+		imgyoudao.setImage((imgyoudao.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
+		ImageIcon imgbaidu = new ImageIcon("baidu.png");
+		imgbaidu.setImage((imgbaidu.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
+		ImageIcon imgbing = new ImageIcon("bing.png");
+		imgbing.setImage((imgbing.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
 		JButton zanBaiDu=new JButton(img);
 		JButton zanBing=new JButton(img);
 		JButton zanYouDao=new JButton(img);
+		JLabel jlbyoudao = new JLabel(imgyoudao);
+		JLabel jlbaidu = new JLabel(imgbaidu);
+		JLabel jlbing = new JLabel(imgbing);
 		setSize(1000,800);
 		setTitle("Online Dictionary");
 		setLocationRelativeTo(null);

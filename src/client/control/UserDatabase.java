@@ -113,7 +113,7 @@ public class UserDatabase {
 		UserDatabase ud = new UserDatabase();
 		ud.createConnection();
 		ud.insert();
-	}
+	}*/
 	public String[] getOnlineuser()
 	{
 		String[] s1={"11","22","33","4","5","6","7","6","4","4","r4","423","43","3","324","weqr","wer","s","d","sd","s"
@@ -134,5 +134,5 @@ public class UserDatabase {
 	{
 		String[] s1={"11","22","33"};
 		return s1;
-	}*/
+	}
 }
