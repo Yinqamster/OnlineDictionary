@@ -110,7 +110,7 @@ public class TouristPage extends JFrame{
 						meaning = deal.getMeaningFromBaiDu(userInput);
 	    				jtBaiDu.setText(meaning);
 	    				jtBaiDu.setVisible(true);
-	    				
+	    		//		System.out.println(meaning);
 	    			}
 	    			if(youDaoSelected)
 	    			{
@@ -130,9 +130,10 @@ public class TouristPage extends JFrame{
 		});
 		
 	}
-	//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+	
+	/*
 	public static void main(String[] args)
 	{
 		TouristPage page=new TouristPage();
-	}
+	}*/
 }

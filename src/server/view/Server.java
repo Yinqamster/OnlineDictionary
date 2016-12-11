@@ -1,4 +1,4 @@
-/*package server.view;
+package server.view;
 
 import javax.swing.JFrame;
 
@@ -12,4 +12,4 @@ public class Server extends JFrame{
 		new MultiThreadServer();
 	}
 
-}*/
+}
