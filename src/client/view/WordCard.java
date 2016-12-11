@@ -11,39 +11,34 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
 /////////////////���ʿ�,��ӵ�cardLayout��/////////////////////
-public class WordCard extends JFrame{
+public class WordCard extends JPanel{
 	Font font=new Font("Microsoft YaHei UI",0,20);
 	
 	public WordCard(String userName,String word,String explanation)
 	{
+		//setLayout(new GridLayout(3,1));
 		setSize(500,350);
-		setTitle("���ʿ�");
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setTitle("���ʿ�");
+		//setLocationRelativeTo(null);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		setLayout(null);
+		setLayout(new BorderLayout());
 		
 		JLabel jtaSender=new JLabel("From: "+userName);
 		jtaSender.setFont(font);
-		jtaSender.setBounds(10, 10, 450, 30);
-		add(jtaSender);
+		//jtaSender.setBounds(10, 10, 450, 30);
+		add(jtaSender,BorderLayout.NORTH);
 		
 		JLabel jtaWord=new JLabel("Word: "+word);
 		jtaWord.setFont(font);
-		jtaWord.setBounds(10,60,450,30);
-		add(jtaWord);
+		//jtaWord.setBounds(10,60,450,30);
+		add(jtaWord,BorderLayout.CENTER);
 		
 		JLabel jtaMeaning=new JLabel("Explanation: "+explanation);
 		jtaMeaning.setFont(font);
 		///setbounds��λ�ú��񲻴�ԣ���Ȼ������û����
-		jtaMeaning.setBounds(10,20,450,210);;
-		add(jtaMeaning);
+		//jtaMeaning.setBounds(10,20,450,210);;
+		add(jtaMeaning,BorderLayout.SOUTH);
 				
 	}
-	//��������������
-	/////////////////�ƺ�\n��\t��ת�����û����//////////////////
-	/*public static void main(String[] args)
-	{
-		WordCard card=new WordCard("user","null","һ��");
-	}*/
 }

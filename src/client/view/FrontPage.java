@@ -1,81 +1,122 @@
 package client.view;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 
 public class FrontPage extends JFrame{
+	private client.control.UserDatabase database=new client.control.UserDatabase();
+	private client.control.DealAction deal=new client.control.DealAction();
 	private Font font=new Font("Microsoft YaHei UI",0,20);
-	private Font font1=new Font("Microsoft YaHei UI",0,25);
-	private JLabel jlbTitle=new JLabel("Online Dictionary");
+	//private Font font1=new Font("Microsoft YaHei UI",0,25);
+	//private JLabel jlbTitle=new JLabel("Online Dictionary");
 	private JLabel jlbInput=new JLabel("Input");
 	private JTextField jtfInput=new JTextField();
-	private JCheckBox jcBaidu=new JCheckBox("°Ù¶È");
-	private JCheckBox jcYouDao=new JCheckBox("ÓĞµÀ");
-	private JCheckBox jcBing=new JCheckBox("±ØÓ¦");
+	private JCheckBox jcBaidu=new JCheckBox("BaiDu");
+	private JCheckBox jcYouDao=new JCheckBox("YouDao");
+	private JCheckBox jcBing=new JCheckBox("Bing");
 	private JButton jbtSearch=new JButton("Search");
-	private JButton zanBaiDu=new JButton("ÔŞ");
-	private JButton zanBing=new JButton("ÔŞ");
-	private JButton zanYouDao=new JButton("ÔŞ");
-	private TitledBorder jlbBaiDu=new TitledBorder("°Ù¶È");
-	private JTextArea jtBaiDu=new JTextArea();
-	private TitledBorder jlbYouDao=new TitledBorder("ÓĞµÀ");
-	private JTextArea jtYouDao=new JTextArea();
-	private TitledBorder jlbBing=new TitledBorder("±ØÓ¦");
-	private JTextArea jtBing=new JTextArea();
-	private client.control.DealAction deal=new client.control.DealAction();
-	//²Ëµ¥
-	String userName="userName";                    ///////////ÓÃ»§ÃûĞèÒª´ÓÊı¾İ¿â»ñÈ¡////////////////
+	//private JButton zanBaiDu=new JButton("Like");
+	//private JButton zanBing=new JButton("Like");
+	//private JButton zanYouDao=new JButton("Like");
+	//private TitledBorder jlbBaiDu=new TitledBorder("ï¿½Ù¶ï¿½");
+	//private JTextArea jtBaiDu=new JTextArea();
+	//private TitledBorder jlbYouDao=new TitledBorder("ï¿½Ğµï¿½");
+	//private JTextArea jtYouDao=new JTextArea();
+	//private TitledBorder jlbBing=new TitledBorder("ï¿½ï¿½Ó¦");
+	//private JTextArea jtBing=new JTextArea();
+	
+	
+	JPanel jpSearch=new JPanel();
+	JPanel jpMeaning=new JPanel();
+	JPanel jpBaidu=new JPanel();
+	JPanel jpYouDao=new JPanel();
+	JPanel jpBing=new JPanel();
+	private JTextField jtfBaiDu = new JTextField(50); 
+	private JTextField jtfBing = new JTextField(50); 
+	private JTextField jtfYouDao = new JTextField(50); 
+	JList jlist=new JList();
+	DefaultListModel dfList=new DefaultListModel();
+	DefaultListSelectionModel slList=new DefaultListSelectionModel();
+	//ï¿½Ëµï¿½
+	String userName="userName";                    
 	JMenuBar jmb=new JMenuBar();
-	JMenu userMenu=new JMenu("ÓÃ»§Ãû");
-	JMenu sendCardMenu=new JMenu("µ¥´Ê¿¨");
-	//JMenu helpMenu=new JMenu("°ïÖú");
-	//JMenuItem userMenu=new JMenuItem("ÓÃ»§Ãû");
-	//JMenuItem sendCardMenu=new JMenuItem("µ¥´Ê¿¨");
-	JMenuItem helpMenu=new JMenuItem("°ïÖú");
-	JMenuItem logoutItem=new JMenuItem("ÍË³ö");
-	JMenuItem onlineUser=new JMenuItem("²é¿´ÔÚÏßÓÃ»§");
-	JMenuItem addFriends=new JMenuItem("Ìí¼ÓºÃÓÑ");
-	JMenuItem onlineFriends=new JMenuItem("²é¿´ÔÚÏßºÃÓÑ");
-	JMenuItem offlineFriends=new JMenuItem("²é¿´ÀëÏßºÃÓÑ");
-	JMenuItem makeCard=new JMenuItem("Éú³Éµ¥´Ê¿¨");
-	JMenuItem sendCard=new JMenuItem("·¢ËÍµ¥´Ê¿¨");
-	///////////////////´ÓÊı¾İ¿â»ñÈ¡µãÔŞ¸öÊı/////////////////////
+	JMenu userMenu=new JMenu("UserName");
+	JMenu sendCardMenu=new JMenu("Word card");
+	//JMenu helpMenu=new JMenu("ï¿½ï¿½ï¿½ï¿½");
+	//JMenuItem userMenu=new JMenuItem("ï¿½Ã»ï¿½ï¿½ï¿½");
+	//JMenuItem sendCardMenu=new JMenuItem("ï¿½ï¿½ï¿½Ê¿ï¿½");
+	JMenuItem viewMenu=new JMenuItem("Look at my word card");
+	JMenuItem helpMenu=new JMenuItem("Help");
+	JMenuItem logoutItem=new JMenuItem("Log out");
+	JMenuItem onlineUser=new JMenuItem("Online Users");
+	JMenuItem addFriends=new JMenuItem("Add friends");
+	JMenuItem onlineFriends=new JMenuItem("Online Friends");
+	JMenuItem offlineFriends=new JMenuItem("Offline Friends");
+	JMenuItem makeCard=new JMenuItem("Generate word card");
+	//JMenuItem sendCard=new JMenuItem("Send word card");
+	///////////////////ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ş¸ï¿½ï¿½ï¿½/////////////////////
 	int likeOFBaiDu=0;
 	int likeOFYouDao=0;
 	int likeOFBing=0;
 	
 	public FrontPage()
 	{
-		jlbTitle.setFont(new Font("Microsoft YaHei UI",1,30));
+		ImageIcon img = new ImageIcon("like.jpg");
+		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
+		ImageIcon imgyoudao = new ImageIcon("youdao.jpg");
+		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
+		
+		JButton zanBaiDu=new JButton(img);
+		JButton zanBing=new JButton(img);
+		JButton zanYouDao=new JButton(img);
+		setSize(1000,800);
+		setTitle("Online Dictionary");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+		setLayout(new BorderLayout(10, 10));
+	
+		//jlbTitle.setFont(new Font("Microsoft YaHei UI",1,30));
 		jlbInput.setFont(font);
 		jtfInput.setFont(font);
 		jbtSearch.setFont(font);
-		jcBaidu.setFont(font1);
-		jcYouDao.setFont(font1);
-		jcBing.setFont(font1);
-		zanBaiDu.setFont(font);
-		zanBing.setFont(font);
-		zanYouDao.setFont(font);
-		jlbBaiDu.setTitleFont(font);
+		//jcBaidu.setFont(font1);
+		//jcYouDao.setFont(font1);
+		//jcBing.setFont(font1);
+		//zanBaiDu.setFont(font);
+		//zanBing.setFont(font);
+		//zanYouDao.setFont(font);
+		/*jlbBaiDu.setTitleFont(font);
 		jlbYouDao.setTitleFont(font);
 		jlbBing.setTitleFont(font);
 		jtBaiDu.setFont(font);
 		jtYouDao.setFont(font);
-		jtBing.setFont(font);
-		
+		jtBing.setFont(font);*/
+		jlist.setFont(font);
 		jmb.setFont(font);
 		userMenu.setFont(font);
 		sendCardMenu.setFont(font);
@@ -83,12 +124,57 @@ public class FrontPage extends JFrame{
 		logoutItem.setFont(font);
 		onlineUser.setFont(font);
 		makeCard.setFont(font);
-		sendCard.setFont(font);
+		viewMenu.setFont(font);
+		//sendCard.setFont(font);
 		addFriends.setFont(font);
 		onlineFriends.setFont(font);
 		offlineFriends.setFont(font);
-        ///////////////////¿ò¼Ü/////////////////////
-		setSize(800,720);
+        ///////////////////ï¿½ï¿½ï¿½/////////////////////
+		userMenu.add(addFriends);
+		userMenu.add(onlineUser);
+		userMenu.add(onlineFriends);
+		userMenu.add(offlineFriends);
+		userMenu.add(logoutItem);
+		sendCardMenu.add(makeCard);
+		sendCardMenu.add(viewMenu);
+		jmb.add(userMenu);
+		jmb.add(sendCardMenu);
+		jmb.add(helpMenu);
+		this.setJMenuBar(jmb);
+		//this.validate();////!!without itï¼Œthe menu is invisible
+		jmb.setVisible(true);
+		
+		jpSearch.setLayout(new BorderLayout(10, 10));
+		//jpSearch.setPreferredSize(new Dimension(30,800));
+		//jlbInput.setPreferredSize(new Dimension(30,100));
+		//jtfInput.setPreferredSize(new Dimension(30,600));
+		//jbtSearch.setPreferredSize(new Dimension(30,100));
+		jpSearch.add(jlbInput,BorderLayout.WEST);
+		jpSearch.add(jtfInput,BorderLayout.CENTER);
+		jpSearch.add(jbtSearch, BorderLayout.EAST);
+		add(jpSearch,BorderLayout.NORTH);
+		
+		jpMeaning.setLayout(new BorderLayout(10, 10));
+		jpBaidu.setLayout(new BorderLayout(10, 10));
+		jpBaidu.add(jtfBaiDu,BorderLayout.CENTER);
+		jpBaidu.add(zanBaiDu,BorderLayout.EAST);
+		jpMeaning.add(jpBaidu,BorderLayout.NORTH);
+		jpYouDao.setLayout(new BorderLayout(10, 10));
+		jpBing.setLayout(new BorderLayout(10, 10));
+		
+		add(new JScrollPane(jlist),BorderLayout.CENTER);
+		add(jpMeaning,BorderLayout.EAST);
+		this.validate();
+		//pack();
+		/*jlist.setBounds(0, 0,150,800);
+		jlist.setVisibleRowCount(30);
+		//add(new JScrollPane(jlist),BorderLayout.CENTER);
+		////æ»šåŠ¨æ¡ä¸çŸ¥é“æ€ä¹ˆåŠ å•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Š å•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Šå•Š
+		//new JScrollPane(jlist);
+		//JScrollPane scroll=new JScrollPane(jlist);
+		//scroll.setBounds(150,0,10, 800);
+		//add(scroll);
+		setSize(1000,800);
 		//userMenu.setBounds(0, 0, 200,48);
 		//sendCardMenu.setBounds(210, 0, 200, 48);
 		//helpMenu.setBounds(400, 0, 200, 48);
@@ -100,21 +186,26 @@ public class FrontPage extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLayout(null);
-		jlbTitle.setBounds(250,30,400,80);
+		//
+		//jlist.setBounds(0, 0,150,800);
+		add(jlist);
+		
+		//
+		jlbTitle.setBounds(410,30,400,80);
 		add(jlbTitle);
-		jlbInput.setBounds(20,120,50,30);
+		jlbInput.setBounds(180,120,50,30);
 		add(jlbInput);
-		jtfInput.setBounds(100,120,500, 40);
+		jtfInput.setBounds(260,120,500, 40);
 		add(jtfInput);
-		jbtSearch.setBounds(620, 120, 100, 40);
+		jbtSearch.setBounds(780, 120, 100, 40);
 		add(jbtSearch);
-		jcBaidu.setBounds(100, 180, 100, 40);
-		jcBing.setBounds(310, 180, 100, 40);
-		jcYouDao.setBounds(520, 180, 100, 40);
+		jcBaidu.setBounds(260, 180, 100, 40);
+		jcBing.setBounds(470, 180, 100, 40);
+		jcYouDao.setBounds(680, 180, 100, 40);
 		add(jcBaidu);
 		add(jcBing);
 		add(jcYouDao);
-		//////²Ëµ¥/////
+		//////ï¿½Ëµï¿½/////
 		jmb.setBounds(0, 0, 790,50);
 		userMenu.add(addFriends);
 		userMenu.add(onlineUser);
@@ -122,63 +213,80 @@ public class FrontPage extends JFrame{
 		userMenu.add(offlineFriends);
 		userMenu.add(logoutItem);
 		sendCardMenu.add(makeCard);
-		sendCardMenu.add(sendCard);
-		//jmb.setSize(800, 50);
+		//sendCardMenu.add(sendCard);
+		sendCardMenu.add(viewMenu);
 		jmb.add(userMenu);
 		//userMenu.setBounds(0, 0, 100,40);
+	
 		jmb.add(sendCardMenu);
 		jmb.add(helpMenu);
-		setJMenuBar(jmb);
-		pack();
-		jmb.setVisible(true);
-		/*helpMenu.addMenuListener(new MenuListener(){
-			public void actionPerformed(MenuEvent e)
-			{
-				JOptionPane.showMessageDialog(null,"°ïÖúÄÚÈİ","°ïÖú",JOptionPane.INFORMATION_MESSAGE);
-			}
-		});*/
+		this.setJMenuBar(jmb);
+		this.validate();////!!without itï¼Œthe menu is invisible
+		jmb.setVisible(true);*/
+		
 		helpMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(null,"°ïÖúÄÚÈİ","°ïÖú",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,"This is an online dictionary","Help",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		/////²é¿´ÔÚÏßÓÃ»§
+		/////ï¿½é¿´ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 		onlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				dfList.clear();
+				String[] onlineusers=database.getOnlineuser();
+				for(int i=0;i<onlineusers.length;i++)
+					dfList.addElement(onlineusers[i]);
+				jlist.setModel(dfList);
 			}
 		});
-		////²é¿´ÔÚÏßºÃÓÑ
+		////ï¿½é¿´ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½
 		onlineFriends.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				dfList.clear();
+				String[] onlineusers=database.getOnlinefriends();
+				for(int i=0;i<onlineusers.length;i++)
+					dfList.addElement(onlineusers[i]);
+				jlist.setModel(dfList);
 			}
 		});
-		//²é¿´ÀëÏßºÃÓÑ
+		//ï¿½é¿´ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½
 		offlineFriends.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				dfList.clear();
+				String[] onlineusers=database.getofflinefriends();
+				for(int i=0;i<onlineusers.length;i++)
+					dfList.addElement(onlineusers[i]);
+				jlist.setModel(dfList);
 			}
 		});
-		//Ìí¼ÓºÃÓÑ
+		//ï¿½ï¿½Óºï¿½ï¿½ï¿½
 		addFriends.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				//slList.clear();
+				String[] onlineusers=database.getOfflineuser();
+				for(int i=0;i<onlineusers.length;i++)
+				{
+				}
+				jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			}
 		});
-		//Éú³Éµ¥´Ê¿¨
+		//look at user word card
+		viewMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+			}
+		});
 		makeCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
 			}
 		});
-		//·¢ËÍµ¥´Ê¿¨
-		sendCard.addActionListener(new ActionListener(){
+		//ï¿½ï¿½ï¿½Íµï¿½ï¿½Ê¿ï¿½
+		/*sendCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
 			}
-		});
+		});*/
 		
 	}
 	public static void main(String[] args)
