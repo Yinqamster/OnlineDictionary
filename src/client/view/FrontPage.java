@@ -99,6 +99,7 @@ public class FrontPage extends JFrame{
 		JLabel jlbyoudao = new JLabel(imgyoudao);
 		JLabel jlbaidu = new JLabel(imgbaidu);
 		JLabel jlbing = new JLabel(imgbing);
+		
 		setSize(1000,800);
 		setTitle("Online Dictionary");
 		setLocationRelativeTo(null);
@@ -132,14 +133,14 @@ public class FrontPage extends JFrame{
 		makeCard.setFont(font);
 		viewMenu.setFont(font);
 		//sendCard.setFont(font);
-		addFriends.setFont(font);
-		onlineFriends.setFont(font);
-		offlineFriends.setFont(font);
+		//addFriends.setFont(font);
+		//onlineFriends.setFont(font);
+		//offlineFriends.setFont(font);
         ///////////////////���/////////////////////
-		userMenu.add(addFriends);
+		//userMenu.add(addFriends);
 		userMenu.add(onlineUser);
-		userMenu.add(onlineFriends);
-		userMenu.add(offlineFriends);
+		//userMenu.add(onlineFriends);
+		//userMenu.add(offlineFriends);
 		userMenu.add(logoutItem);
 		sendCardMenu.add(makeCard);
 		sendCardMenu.add(viewMenu);
@@ -247,7 +248,7 @@ public class FrontPage extends JFrame{
 			}
 		});
 		////�鿴���ߺ���
-		onlineFriends.addActionListener(new ActionListener(){
+		/*onlineFriends.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dfList.clear();
 				String[] onlineusers=database.getOnlinefriends();
@@ -286,7 +287,7 @@ public class FrontPage extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				
 			}
-		});
+		});*/
 		//���͵��ʿ�
 		/*sendCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
