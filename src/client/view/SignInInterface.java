@@ -25,7 +25,7 @@ public class SignInInterface extends JFrame{
 	private BufferedReader fromServer;
 	
 	
-	public SignInInterface() {
+	public SignInInterface(Socket socket) {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
@@ -92,7 +92,7 @@ public class SignInInterface extends JFrame{
 		//				System.out.println("name exists");
 						SignInInterface.this.setVisible(false);
 						JOptionPane.showMessageDialog(null,"User name already exists！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-						new SignInInterface();
+						new SignInInterface(socket);
 				//		new nameExistsWrong();
 					}
 					else {
@@ -101,7 +101,7 @@ public class SignInInterface extends JFrame{
 						//	toServer.flush();
 							SignInInterface.this.setVisible(false);
 							JOptionPane.showMessageDialog(null,"Password must be at least 6 characters！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-							new SignInInterface();
+							new SignInInterface(socket);
 					//		new PasswordShort();
 					//		System.out.println("密码至少为6位");
 						}
@@ -110,7 +110,7 @@ public class SignInInterface extends JFrame{
 					//		toServer.flush();
 							SignInInterface.this.setVisible(false);
 							JOptionPane.showMessageDialog(null,"The passwords you typed do not match！","Reminder",JOptionPane.INFORMATION_MESSAGE);
-							new SignInInterface();
+							new SignInInterface(socket);
 					//		new PasswordNotEqual();
 				//			System.out.println("两次密码不一致");
 						}
@@ -138,9 +138,9 @@ public class SignInInterface extends JFrame{
 			}
 		});
 		
-		try {
+/*		try {
 //			@SuppressWarnings("resource")
-			Socket socket = new Socket("localhost", 8000);
+			Socket socket = new Socket("114.212.132.167", 8000);
 			
 //			fromServer = new DataInputStream(socket.getInputStream());
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -151,7 +151,7 @@ public class SignInInterface extends JFrame{
 		catch(IOException ex) {
 			System.out.println(ex);
 			
-		}
+		}*/
 	}	
 }
 

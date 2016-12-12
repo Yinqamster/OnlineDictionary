@@ -97,7 +97,8 @@ public class FrontPage extends JFrame{
 	int likeOFBaiDu=0;
 	int likeOFYouDao=0;
 	int likeOFBing=0;
-	ImageIcon img = new ImageIcon("like.jpg");
+	ImageIcon img = new ImageIcon("like.png");
+	ImageIcon imgnew=new ImageIcon("like_1.png");
 	ImageIcon imgyoudao = new ImageIcon("youdao.png");
 	ImageIcon imgbaidu = new ImageIcon("baidu.png");
 	ImageIcon imgbing = new ImageIcon("bing.png");
@@ -117,6 +118,7 @@ public class FrontPage extends JFrame{
 		userName=UserName;
 		JMenu userMenu=new JMenu(UserName);
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
+		imgnew.setImage((imgnew.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
 		imgyoudao.setImage((imgyoudao.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
 		imgbaidu.setImage((imgbaidu.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
 		imgbing.setImage((imgbing.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
@@ -229,6 +231,9 @@ public class FrontPage extends JFrame{
 	    		jpBaidu.setVisible(false);
 	    		jpBing.setVisible(false);
 	    		jpYouDao.setVisible(false);
+	    		zanBaiDu.setIcon(img);
+	    		zanBing.setIcon(img);
+	    		zanYouDao.setIcon(img);
 	    		String word=jtfInput.getText();
 	    		String meaningOfBaidu=null;
 	    		String meaningOfBing=null;
@@ -301,18 +306,21 @@ public class FrontPage extends JFrame{
 	    //点赞
 		zanBaiDu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				zanBaiDu.setIcon(imgnew);
 				likeOFBaiDu++;
 				//写回数据库
 			}
 		});
 		zanBing.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				 zanBing.setIcon(imgnew);
 		         likeOFBing++;
 		         //写回数据库
 			}
 		});
 		zanYouDao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				zanYouDao.setIcon(imgnew);
 				likeOFYouDao++;
 				//写回数据库
 			}
@@ -321,6 +329,7 @@ public class FrontPage extends JFrame{
 		onlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 		//		database.createConnection();
+
 				dfList.clear();
 				try {
 					toServer.write("2 " + "on" + "\n");

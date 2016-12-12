@@ -84,7 +84,10 @@ public class MultiThreadServer extends JFrame{
 						}
 						else if(ud.nameExists(words[1])) {
 							if (ud.passwordCorrectly(words[1], words[2])) {
+								ud.setStateOn(words[1]);
+					//			ud.getOnlineUser();
 								outputToClient.write("1\n");
+								
 							}
 							else {
 								outputToClient.write("2\n");
@@ -114,8 +117,22 @@ public class MultiThreadServer extends JFrame{
 							}
 						}
 					}
-					else if (words[0].equals("2")) {  //游客登录
+					else if (words[0].equals("2")) {  //获取在线离线用户
+						if (words[1].equals("on")) {
+							String str = ud.getOnlineUser();
+						//	System.out.println(str);
+							outputToClient.write(str + "\n");
+						}
+						else if (words[1].equals("off")) {
+							String str = ud.getOfflineUser();
+						//	System.out.println(str);
+							outputToClient.write(str + "\n");
+						}
 						
+					}
+					else if (words[0].equals("3")) {  //logout
+						ud.setStateOff(words[1]);
+						outputToClient.write("1\n");
 					}
 					outputToClient.flush();
 			//		outputToClient.writeChars("ok !!");

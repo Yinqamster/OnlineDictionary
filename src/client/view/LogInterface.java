@@ -53,15 +53,17 @@ public class LogInterface extends JFrame{
 		jpLogPane.setPreferredSize(new Dimension(100, 500));
 		add(jpLogPane, BorderLayout.CENTER);
 		
-		bindLogClickEvent();
-		bindSighUpClickEvent();
-		bindTourOkClickEvent();
+		
 		
 		try {
-			Socket socket = new Socket("localhost", 8000);
+			Socket socket = new Socket("114.212.132.167", 8000);
 			
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			
+			bindLogClickEvent(socket);
+			bindSighUpClickEvent(socket);
+			bindTourOkClickEvent();
 		}
 		catch(IOException ex) {
 			System.out.println(ex);
@@ -150,7 +152,7 @@ public class LogInterface extends JFrame{
 		return jpShowPane;
 	}
 	
-	private void bindLogClickEvent() {
+	private void bindLogClickEvent(Socket socket) {
 		jpLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -180,13 +182,15 @@ public class LogInterface extends JFrame{
 							LogInterface.this.setVisible(false);
 							JOptionPane.showMessageDialog(null,"User name does not exist！","Reminder",JOptionPane.INFORMATION_MESSAGE);
 							new LogInterface();
+							
 					//		new userNameNotExists();
 				//			System.out.println("用户名不存在");
 						}
 						else {
 							if (res == 1) {
-								System.out.println("Login Successful");
-								
+							//	System.out.println("Login Successful");
+								LogInterface.this.setVisible(false);
+								new FrontPage(userName, socket);
 							}
 							else if (res == 2) {
 								LogInterface.this.setVisible(false);
@@ -205,11 +209,11 @@ public class LogInterface extends JFrame{
 		});
 	}
 	
-	private void bindSighUpClickEvent() {
+	private void bindSighUpClickEvent(Socket socket) {
 		jpSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LogInterface.this.setVisible(false);
-				new SignInInterface();
+				new SignInInterface(socket);
 			}
 		});
 	}
