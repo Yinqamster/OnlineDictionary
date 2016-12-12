@@ -54,8 +54,21 @@ public class UserDatabase {
 	    }
 	}
 	
-	public void setState(String name) {
+	public void setStateOn(String name) {
 		String sql = "update user_information set state = 1 where user_name = " + "'" + name + "'";
+	    PreparedStatement pstmt;
+	    try {
+	        pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+	//        con.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void setStateOff(String name) {
+		String sql = "update user_information set state = 0 where user_name = " + "'" + name + "'";
 	    PreparedStatement pstmt;
 	    try {
 	        pstmt = (PreparedStatement) con.prepareStatement(sql);

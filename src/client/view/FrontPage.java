@@ -8,8 +8,12 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import javax.swing.DefaultListModel;
@@ -32,6 +36,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 
 public class FrontPage extends JFrame{
+	private BufferedWriter toServer;
+	private BufferedReader fromServer;
+	
+	
 	private client.control.UserDatabase database=new client.control.UserDatabase();
 	private client.control.DealAction deal=new client.control.DealAction();
 	private Font font=new Font("Microsoft YaHei UI",0,20);
@@ -96,8 +104,16 @@ public class FrontPage extends JFrame{
 	JButton zanBaiDu=new JButton(img);
 	JButton zanBing=new JButton(img);
 	JButton zanYouDao=new JButton(img);
-	public FrontPage(String UserName)   
+	public FrontPage(String UserName, Socket socket)   
 	{
+		try {
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		}
+		catch(IOException ex) {
+			System.out.println(ex);
+		}
+		
 		userName=UserName;
 		JMenu userMenu=new JMenu(UserName);
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
@@ -304,24 +320,63 @@ public class FrontPage extends JFrame{
 		//在线离线好友
 		onlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+		//		database.createConnection();
 				dfList.clear();
-				String[] onlineusers=database.getOnlineUser().split(" ");
-				for(int i=0;i<onlineusers.length;i++)
-					dfList.addElement(onlineusers[i]);
-				jlist.setModel(dfList);
+				try {
+					toServer.write("2 " + "on" + "\n");
+					toServer.flush();
+					String res = fromServer.readLine();
+				//	System.out.println(res);
+					String[] onlineusers=res.split(" ");
+					dfList.addElement("Online User :");
+					for(int i=0;i<onlineusers.length;i++)
+						dfList.addElement(onlineusers[i]);
+					jlist.setModel(dfList);
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
+				}
+				
 			}
 		});
 		offlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				database.createConnection();
 				dfList.clear();
-				String[] onlineusers=database.getOnlineUser().split(" ");
-				for(int i=0;i<onlineusers.length;i++)
-					dfList.addElement(onlineusers[i]);
-				jlist.setModel(dfList);
+				try {
+					toServer.write("2 " + "off" + "\n");
+					toServer.flush();
+					String res = fromServer.readLine();
+					String[] offlineusers=database.getOfflineUser().split(" ");
+					dfList.addElement("Offline User :");
+					for(int i=0;i<offlineusers.length;i++)
+						dfList.addElement(offlineusers[i]);
+					jlist.setModel(dfList);
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
+				}
 			}
 		});
 		//look at user word card
 		//有机会再实现吧~
+		logoutItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				try {
+					toServer.write("3 " + UserName + "\n");
+					toServer.flush();
+					int res = Integer.parseInt(fromServer.readLine());
+					if (res == 1) {
+						FrontPage.this.setVisible(false);
+						new LogInterface();
+					}
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
+				}
+			}
+		});
+		
 		viewMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 			}
@@ -352,8 +407,10 @@ public class FrontPage extends JFrame{
 		else
 			return 3;
 	}
+	
+	/*
 	public static void main(String[] args)
 	{
 		FrontPage page=new FrontPage("Aviva");
-	}
+	}*/
 }
