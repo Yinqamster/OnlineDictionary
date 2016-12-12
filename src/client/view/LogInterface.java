@@ -53,15 +53,17 @@ public class LogInterface extends JFrame{
 		jpLogPane.setPreferredSize(new Dimension(100, 500));
 		add(jpLogPane, BorderLayout.CENTER);
 		
-		bindLogClickEvent();
-		bindSighUpClickEvent();
-		bindTourOkClickEvent();
+		
 		
 		try {
-			Socket socket = new Socket("localhost", 8000);
+			Socket socket = new Socket("114.212.132.167", 8000);
 			
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			
+			bindLogClickEvent();
+			bindSighUpClickEvent(socket);
+			bindTourOkClickEvent();
 		}
 		catch(IOException ex) {
 			System.out.println(ex);
@@ -186,7 +188,7 @@ public class LogInterface extends JFrame{
 						else {
 							if (res == 1) {
 								System.out.println("Login Successful");
-								
+								new FrontPage(userName);
 							}
 							else if (res == 2) {
 								LogInterface.this.setVisible(false);
@@ -205,11 +207,11 @@ public class LogInterface extends JFrame{
 		});
 	}
 	
-	private void bindSighUpClickEvent() {
+	private void bindSighUpClickEvent(Socket socket) {
 		jpSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LogInterface.this.setVisible(false);
-				new SignInInterface();
+				new SignInInterface(socket);
 			}
 		});
 	}
@@ -224,14 +226,14 @@ public class LogInterface extends JFrame{
 		});
 	}
 	
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 		LogInterface frame = new LogInterface();
 		frame.setTitle("Online Dictionary");
 		frame.setSize(500, 300);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-	}
+	}*/
 
 }
 
