@@ -314,7 +314,7 @@ public class FrontPage extends JFrame{
 		offlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dfList.clear();
-				String[] onlineusers=database.getOnlineuser();
+				String[] onlineusers=database.getOnlineUser().split(" ");
 				for(int i=0;i<onlineusers.length;i++)
 					dfList.addElement(onlineusers[i]);
 				jlist.setModel(dfList);
