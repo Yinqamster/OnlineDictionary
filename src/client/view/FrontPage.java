@@ -4,9 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
@@ -31,7 +35,7 @@ public class FrontPage extends JFrame{
 	private client.control.UserDatabase database=new client.control.UserDatabase();
 	private client.control.DealAction deal=new client.control.DealAction();
 	private Font font=new Font("Microsoft YaHei UI",0,20);
-	//private Font font1=new Font("Microsoft YaHei UI",0,25);
+	private Font font1=new Font("Microsoft YaHei UI",0,25);
 	//private JLabel jlbTitle=new JLabel("Online Dictionary");
 	private JLabel jlbInput=new JLabel("Input");
 	private JTextField jtfInput=new JTextField();
@@ -55,16 +59,18 @@ public class FrontPage extends JFrame{
 	JPanel jpBaidu=new JPanel();
 	JPanel jpYouDao=new JPanel();
 	JPanel jpBing=new JPanel();
+	JPanel checkbox=new JPanel();
+	JPanel right=new JPanel();
 	private JTextField jtfBaiDu = new JTextField(50); 
 	private JTextField jtfBing = new JTextField(50); 
 	private JTextField jtfYouDao = new JTextField(50); 
 	JList jlist=new JList();
 	DefaultListModel dfList=new DefaultListModel();
 	DefaultListSelectionModel slList=new DefaultListSelectionModel();
-	//�˵�
-	String userName="userName";                    
+	String userName=null;                                      ///用户名在登录的时候传入          
+	String sendMeaning=null;                                   ///要发送的意思，默认为点赞数最多的那个
 	JMenuBar jmb=new JMenuBar();
-	JMenu userMenu=new JMenu("UserName");
+	//JMenu userMenu=new JMenu("UserName");
 	JMenu sendCardMenu=new JMenu("Word card");
 	//JMenu helpMenu=new JMenu("����");
 	//JMenuItem userMenu=new JMenuItem("�û���");
@@ -73,6 +79,7 @@ public class FrontPage extends JFrame{
 	JMenuItem helpMenu=new JMenuItem("Help");
 	JMenuItem logoutItem=new JMenuItem("Log out");
 	JMenuItem onlineUser=new JMenuItem("Online Users");
+	JMenuItem offlineUser=new JMenuItem("Offline Users");
 	//JMenuItem addFriends=new JMenuItem("Add friends");
 	//JMenuItem onlineFriends=new JMenuItem("Online Friends");
 	//JMenuItem offlineFriends=new JMenuItem("Offline Friends");
@@ -82,23 +89,24 @@ public class FrontPage extends JFrame{
 	int likeOFBaiDu=0;
 	int likeOFYouDao=0;
 	int likeOFBing=0;
-	
-	public FrontPage()
+	ImageIcon img = new ImageIcon("like.jpg");
+	ImageIcon imgyoudao = new ImageIcon("youdao.png");
+	ImageIcon imgbaidu = new ImageIcon("baidu.png");
+	ImageIcon imgbing = new ImageIcon("bing.png");
+	JButton zanBaiDu=new JButton(img);
+	JButton zanBing=new JButton(img);
+	JButton zanYouDao=new JButton(img);
+	public FrontPage(String UserName)   
 	{
-		ImageIcon img = new ImageIcon("like.jpg");
+		userName=UserName;
+		JMenu userMenu=new JMenu(UserName);
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		ImageIcon imgyoudao = new ImageIcon("youdao.png");
 		imgyoudao.setImage((imgyoudao.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		ImageIcon imgbaidu = new ImageIcon("baidu.png");
 		imgbaidu.setImage((imgbaidu.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		ImageIcon imgbing = new ImageIcon("bing.png");
 		imgbing.setImage((imgbing.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
-		JButton zanBaiDu=new JButton(img);
-		JButton zanBing=new JButton(img);
-		JButton zanYouDao=new JButton(img);
 		JLabel jlbyoudao = new JLabel(imgyoudao);
-		JLabel jlbaidu = new JLabel(imgbaidu);
-		JLabel jlbing = new JLabel(imgbing);
+		JLabel jlbbaidu = new JLabel(imgbaidu);
+		JLabel jlbbing = new JLabel(imgbing);
 		
 		setSize(1000,800);
 		setTitle("Online Dictionary");
@@ -106,14 +114,18 @@ public class FrontPage extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLayout(new BorderLayout(10, 10));
-	
+		
+		//jlist.setVisibleRowCount(30);
 		//jlbTitle.setFont(new Font("Microsoft YaHei UI",1,30));
 		jlbInput.setFont(font);
 		jtfInput.setFont(font);
 		jbtSearch.setFont(font);
-		//jcBaidu.setFont(font1);
-		//jcYouDao.setFont(font1);
-		//jcBing.setFont(font1);
+		//jtfBaiDu.setFont(font);
+		//jtfYouDao.setFont(font);
+		//jtfBing.setFont(font);
+		jcBaidu.setFont(font1);
+		jcYouDao.setFont(font1);
+		jcBing.setFont(font1);
 		//zanBaiDu.setFont(font);
 		//zanBing.setFont(font);
 		//zanYouDao.setFont(font);
@@ -132,6 +144,7 @@ public class FrontPage extends JFrame{
 		onlineUser.setFont(font);
 		makeCard.setFont(font);
 		viewMenu.setFont(font);
+		offlineUser.setFont(font);
 		//sendCard.setFont(font);
 		//addFriends.setFont(font);
 		//onlineFriends.setFont(font);
@@ -139,6 +152,7 @@ public class FrontPage extends JFrame{
         ///////////////////���/////////////////////
 		//userMenu.add(addFriends);
 		userMenu.add(onlineUser);
+		userMenu.add(offlineUser);
 		//userMenu.add(onlineFriends);
 		//userMenu.add(offlineFriends);
 		userMenu.add(logoutItem);
@@ -150,94 +164,144 @@ public class FrontPage extends JFrame{
 		this.setJMenuBar(jmb);
 		//this.validate();////!!without it，the menu is invisible
 		jmb.setVisible(true);
-		
+		right.setLayout(new BorderLayout(10, 10));
+		add(right,BorderLayout.EAST);
+		checkbox.setLayout(new GridLayout(1,3));
+		checkbox.add(jcBaidu);
+		checkbox.add(jcYouDao);
+		checkbox.add(jcBing);
+		right.add(checkbox, BorderLayout.NORTH);
+		right.add(jpMeaning, BorderLayout.CENTER);
 		jpSearch.setLayout(new BorderLayout(10, 10));
-		//jpSearch.setPreferredSize(new Dimension(30,800));
-		//jlbInput.setPreferredSize(new Dimension(30,100));
-		//jtfInput.setPreferredSize(new Dimension(30,600));
-		//jbtSearch.setPreferredSize(new Dimension(30,100));
 		jpSearch.add(jlbInput,BorderLayout.WEST);
 		jpSearch.add(jtfInput,BorderLayout.CENTER);
 		jpSearch.add(jbtSearch, BorderLayout.EAST);
 		add(jpSearch,BorderLayout.NORTH);
 		
-		jpMeaning.setLayout(new BorderLayout(10, 10));
+		jpMeaning.setLayout(new BorderLayout(10,10));
 		jpBaidu.setLayout(new BorderLayout(10, 10));
 		jpBaidu.add(jtfBaiDu,BorderLayout.CENTER);
 		jpBaidu.add(zanBaiDu,BorderLayout.EAST);
-		jpMeaning.add(jpBaidu,BorderLayout.NORTH);
+		jpBaidu.add(jlbbaidu,BorderLayout.WEST);
+		jpMeaning.add(jpBaidu,BorderLayout.NORTH);    ////位置需要更改
 		jpYouDao.setLayout(new BorderLayout(10, 10));
+		jpYouDao.add(zanYouDao, BorderLayout.EAST);
+		jpYouDao.add(jtfYouDao,BorderLayout.CENTER);
+		jpYouDao.add(jlbyoudao, BorderLayout.WEST);
+		jpMeaning.add(jpYouDao,BorderLayout.CENTER);  ///位置需要更改
 		jpBing.setLayout(new BorderLayout(10, 10));
+		jpBing.add(zanBing, BorderLayout.EAST);
+		jpBing.add(jtfBing, BorderLayout.CENTER);
+		jpBing.add(jlbbing, BorderLayout.WEST);
+		jpMeaning.add(jpBing,BorderLayout.SOUTH);   ///位置需要更改
 		
 		add(new JScrollPane(jlist),BorderLayout.CENTER);
-		add(jpMeaning,BorderLayout.EAST);
-		this.validate();
-		//pack();
-		/*jlist.setBounds(0, 0,150,800);
-		jlist.setVisibleRowCount(30);
-		//add(new JScrollPane(jlist),BorderLayout.CENTER);
-		////滚动条不知道怎么加啊啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
-		//new JScrollPane(jlist);
-		//JScrollPane scroll=new JScrollPane(jlist);
-		//scroll.setBounds(150,0,10, 800);
-		//add(scroll);
-		setSize(1000,800);
-		//userMenu.setBounds(0, 0, 200,48);
-		//sendCardMenu.setBounds(210, 0, 200, 48);
-		//helpMenu.setBounds(400, 0, 200, 48);
-		//userMenu.setPreferredSize(new Dimension(200,50));
-		//sendCard.setPreferredSize(new Dimension(200,50));
-		//helpMenu.setPreferredSize(new Dimension(200,50));
-		setTitle("Online Dictionary");
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-		setLayout(null);
-		//
-		//jlist.setBounds(0, 0,150,800);
-		add(jlist);
-		
-		//
-		jlbTitle.setBounds(410,30,400,80);
-		add(jlbTitle);
-		jlbInput.setBounds(180,120,50,30);
-		add(jlbInput);
-		jtfInput.setBounds(260,120,500, 40);
-		add(jtfInput);
-		jbtSearch.setBounds(780, 120, 100, 40);
-		add(jbtSearch);
-		jcBaidu.setBounds(260, 180, 100, 40);
-		jcBing.setBounds(470, 180, 100, 40);
-		jcYouDao.setBounds(680, 180, 100, 40);
-		add(jcBaidu);
-		add(jcBing);
-		add(jcYouDao);
-		//////�˵�/////
-		jmb.setBounds(0, 0, 790,50);
-		userMenu.add(addFriends);
-		userMenu.add(onlineUser);
-		userMenu.add(onlineFriends);
-		userMenu.add(offlineFriends);
-		userMenu.add(logoutItem);
-		sendCardMenu.add(makeCard);
-		//sendCardMenu.add(sendCard);
-		sendCardMenu.add(viewMenu);
-		jmb.add(userMenu);
-		//userMenu.setBounds(0, 0, 100,40);
-	
-		jmb.add(sendCardMenu);
-		jmb.add(helpMenu);
-		this.setJMenuBar(jmb);
-		this.validate();////!!without it，the menu is invisible
-		jmb.setVisible(true);*/
-		
+		//jpBaidu.setVisible(false);
+		//jpBing.setVisible(false);
+		//jpYouDao.setVisible(false);
+		//this.validate();
+		pack();
 		helpMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
 			{
 				JOptionPane.showMessageDialog(null,"This is an online dictionary","Help",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		/////�鿴�����û�
+		/////search
+		jbtSearch.addActionListener(new ActionListener(){
+	    	public void actionPerformed(ActionEvent e){
+	    		jpBaidu.setVisible(false);
+	    		jpBing.setVisible(false);
+	    		jpYouDao.setVisible(false);
+	    		String word=jtfInput.getText();
+	    		String meaningOfBaidu=null;
+	    		String meaningOfBing=null;
+	    		String meaningOfYouDao=null;
+	    		boolean baiduSelected=jcBaidu.isSelected();
+	    		boolean youDaoSelected=jcYouDao.isSelected();
+	    		boolean bingSelected=jcBing.isSelected();
+	    		if(deal.checkLegality(word))
+	    		{
+	    			jtfBaiDu.setText(meaningOfBaidu);
+	    			jtfYouDao.setText(meaningOfYouDao);
+	    			jtfBing.setText(meaningOfBing);
+	    			//如果一个都没有选的话，就全部显示
+	    			if((!baiduSelected)&&(!youDaoSelected)&&(!bingSelected))
+	    			{
+	    				baiduSelected=true;
+	    				youDaoSelected=true;
+	    				bingSelected=true;
+	    			}
+	    			if(baiduSelected)
+	    			{
+	    				//String meaning;
+	    				likeOFBaiDu=5; ///从数据库获取
+	    				meaningOfBaidu = deal.getMeaningFromBaiDu(word);
+	    				jtfBaiDu.setText(meaningOfBaidu);
+	    		//		System.out.println(meaning);
+	    			}
+	    			if(youDaoSelected)
+	    			{
+	    				likeOFYouDao=8;  ///从数据库获取
+	    				meaningOfYouDao=deal.getMeaningFromYouDao(word);
+	    				jtfYouDao.setText(meaningOfYouDao);
+	    			}
+	    			if(bingSelected)
+	    			{
+	    				likeOFBing=9;    //从数据库获取
+	    				meaningOfBing=deal.getMeaningFromBing(word);
+	    				jtfBing.setText(meaningOfBing);
+	    			}
+	    		}
+	    		int placeOfBaidu=getPlace(likeOFBaiDu,likeOFYouDao,likeOFBing);
+	    		int placeOfBing=getPlace(likeOFBing,likeOFBaiDu,likeOFYouDao);
+	    		int placeOfYouDao=getPlace(likeOFYouDao,likeOFBing,likeOFBaiDu);
+	    		if(baiduSelected)
+	    		{
+	    			switch(placeOfBaidu)
+	    			{case 1:{jpMeaning.add(jpBaidu,BorderLayout.NORTH);sendMeaning=meaningOfBaidu;}break;
+	    			 case 2:jpMeaning.add(jpBaidu,BorderLayout.CENTER);break;
+	    			 case 3:jpMeaning.add(jpBaidu,BorderLayout.SOUTH);break;}
+	    			jpBaidu.setVisible(true);
+	    		}
+	    		if(youDaoSelected)
+	    		{
+	    			switch(placeOfYouDao)
+	    			{case 1:{jpMeaning.add(jpYouDao,BorderLayout.NORTH);sendMeaning=meaningOfYouDao;}break;
+	    			 case 2:jpMeaning.add(jpYouDao,BorderLayout.CENTER);break;
+	    			 case 3:jpMeaning.add(jpYouDao,BorderLayout.SOUTH);break;}
+	    			jpYouDao.setVisible(true);
+	    		}
+	    		if(bingSelected)
+	    		{
+	    			switch(placeOfBing)
+	    			{case 1:{jpMeaning.add(jpBing,BorderLayout.NORTH);sendMeaning=meaningOfBing;}break;
+	    			 case 2:jpMeaning.add(jpBing,BorderLayout.CENTER);break;
+	    			 case 3:jpMeaning.add(jpBing,BorderLayout.SOUTH);break;}
+	    			jpBing.setVisible(true);
+	    		}
+	    	}
+	    });
+	    //点赞
+		zanBaiDu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				likeOFBaiDu++;
+				//写回数据库
+			}
+		});
+		zanBing.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+		         likeOFBing++;
+		         //写回数据库
+			}
+		});
+		zanYouDao.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				likeOFYouDao++;
+				//写回数据库
+			}
+		});
+		//在线离线好友
 		onlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dfList.clear();
@@ -247,57 +311,49 @@ public class FrontPage extends JFrame{
 				jlist.setModel(dfList);
 			}
 		});
-		////�鿴���ߺ���
-		/*onlineFriends.addActionListener(new ActionListener(){
+		offlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dfList.clear();
-				String[] onlineusers=database.getOnlinefriends();
+				String[] onlineusers=database.getOnlineuser();
 				for(int i=0;i<onlineusers.length;i++)
 					dfList.addElement(onlineusers[i]);
 				jlist.setModel(dfList);
-			}
-		});
-		//�鿴���ߺ���
-		offlineFriends.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				dfList.clear();
-				String[] onlineusers=database.getofflinefriends();
-				for(int i=0;i<onlineusers.length;i++)
-					dfList.addElement(onlineusers[i]);
-				jlist.setModel(dfList);
-			}
-		});
-		//��Ӻ���
-		addFriends.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				//slList.clear();
-				String[] onlineusers=database.getOfflineuser();
-				for(int i=0;i<onlineusers.length;i++)
-				{
-				}
-				jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			}
 		});
 		//look at user word card
+		//有机会再实现吧~
 		viewMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 			}
 		});
 		makeCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				/*String word=jtfInput.getText();
+				WordCard wordcard=new WordCard(userName,word,sendMeaning);
+				try{
+					Socket socket=new Socket(host,8000);
+					ObjectOutputStream toServer=new ObjectOutputStream(socket.getOutputStream());
+					toServer.writeObject(wordcard);
+				}
+				catch(IOException ex)
+				{
+					System.err.println(ex);
+				}*/
 			}
-		});*/
-		//���͵��ʿ�
-		/*sendCard.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
-			}
-		});*/
-		
+		});
+		//���͵��ʿ�	
+	}
+	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
+	{
+		if (a>b&&a>c)
+			return 1;
+		else if((b>a&&a>c)||(c>a&&a>b))
+			return 2;
+		else
+			return 3;
 	}
 	public static void main(String[] args)
 	{
-		FrontPage page=new FrontPage();
+		FrontPage page=new FrontPage("Aviva");
 	}
 }
