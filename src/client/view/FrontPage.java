@@ -108,9 +108,6 @@ public class FrontPage extends JFrame{
 	JButton zanYouDao=new JButton(img);
 	public FrontPage(String UserName, Socket socket)   
 	{
-		likeOFBaiDu=0;
-		likeOFYouDao=0;
-		likeOFBing=0;
 		try {
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -232,35 +229,55 @@ public class FrontPage extends JFrame{
 		/////search
 		jbtSearch.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
+	    		likeOFBaiDu=-1;
+	    		likeOFYouDao=-1;
+	    		likeOFBing=-1;
 	    		jpBaidu.setVisible(false);
 	    		jpBing.setVisible(false);
 	    		jpYouDao.setVisible(false);
+	    	/*	jpMeaning.remove(jpBaidu);
+	    		jpMeaning.remove(jpBing);
+	    		jpMeaning.remove(jpYouDao);
+	    		jpMeaning.repaint();*/
+	    		
 	    		zanBaiDu.setIcon(img);
 	    		zanBing.setIcon(img);
 	    		zanYouDao.setIcon(img);
 	    		String word=jtfInput.getText();
-	    		String meaningOfBaidu="";
-	    		String meaningOfBing="";
-	    		String meaningOfYouDao="";
+	    		String meaningOfBaidu="please input";
+	    		String meaningOfBing="please input";
+	    		String meaningOfYouDao="please input";
 	    		boolean baiduSelected=jcBaidu.isSelected();
 	    		boolean youDaoSelected=jcYouDao.isSelected();
 	    		boolean bingSelected=jcBing.isSelected();
+	    	/*	int placeOfBaidu = 0;
+	    		int placeOfYouDao = 0;
+	    		int placeOfBing = 0;
+	    		int position = 0;*/
+	    		int seleNo = 0;
 	    		if(deal.checkLegality(word))
 	    		{
 	    			jtfBaiDu.setText(meaningOfBaidu);
 	    			jtfYouDao.setText(meaningOfYouDao);
 	    			jtfBing.setText(meaningOfBing);
+	    			
 	    			//如果一个都没有选的话，就全部显示
 	    			if((!baiduSelected)&&(!youDaoSelected)&&(!bingSelected))
 	    			{
 	    				baiduSelected=true;
 	    				youDaoSelected=true;
 	    				bingSelected=true;
+	    				
+	    			/*	placeOfBaidu = 1;
+			    		placeOfYouDao = 2;
+			    		placeOfBing = 3;*/
 	    			}
 	    			try {
 		    			if(baiduSelected)
 		    			{
 		    				//String meaning;
+		    			//	placeOfBaidu= position++;
+		    				seleNo++;
 		    				toServer.write("4 baidu get " + word + "\n");
 							toServer.flush();
 							likeOFBaiDu = Integer.parseInt(fromServer.readLine()); ///从数据库获取
@@ -270,6 +287,8 @@ public class FrontPage extends JFrame{
 		    			}
 		    			if(youDaoSelected)
 		    			{
+		    			//	placeOfYouDao= position++;
+		    				seleNo++;
 		    				toServer.write("4 youdao get " + word + "\n");
 							toServer.flush();
 		    				likeOFYouDao = Integer.parseInt(fromServer.readLine());;  ///从数据库获取
@@ -278,6 +297,8 @@ public class FrontPage extends JFrame{
 		    			}
 		    			if(bingSelected)
 		    			{
+		    			//	placeOfBing= position++;
+		    				seleNo++;
 		    				toServer.write("4 bing get " + word + "\n");
 							toServer.flush();
 		    				likeOFBing = Integer.parseInt(fromServer.readLine());;    //从数据库获取
@@ -290,11 +311,19 @@ public class FrontPage extends JFrame{
 						System.out.println(ex);
 					}
 	    		}
+	    		else {
+	    			jtfBaiDu.setText(meaningOfBaidu);
+	    			jtfYouDao.setText(meaningOfYouDao);
+	    			jtfBing.setText(meaningOfBing);
+	    			baiduSelected=true;
+    				youDaoSelected=true;
+    				bingSelected=true;
+	    		}
 	    		
-	    		int placeOfBaidu = 1;
-	    		int placeOfYouDao = 2;
-	    		int placeOfBing = 3;
 	    		
+	    		int placeOfBaidu = 0;
+	    		int placeOfYouDao = 0;
+	    		int placeOfBing = 0;
 	    		int[][] pos = {{likeOFBaiDu, 1},{likeOFYouDao, 2},{likeOFBing, 3}};
 	    		pos = getPlace(pos);
 	    		for (int i = 0; i < 3; i++) {
@@ -317,7 +346,7 @@ public class FrontPage extends JFrame{
 	    			{case 1:{jpMeaning.add(jpBaidu,BorderLayout.NORTH);sendMeaning=meaningOfBaidu;}break;
 	    			 case 2:jpMeaning.add(jpBaidu,BorderLayout.CENTER);break;
 	    			 case 3:jpMeaning.add(jpBaidu,BorderLayout.SOUTH);break;}
-	    			jpBaidu.setVisible(true);
+	    			 jpBaidu.setVisible(true);
 	    		}
 	    		if(youDaoSelected)
 	    		{
@@ -325,7 +354,7 @@ public class FrontPage extends JFrame{
 	    			{case 1:{jpMeaning.add(jpYouDao,BorderLayout.NORTH);sendMeaning=meaningOfYouDao;}break;
 	    			 case 2:jpMeaning.add(jpYouDao,BorderLayout.CENTER);break;
 	    			 case 3:jpMeaning.add(jpYouDao,BorderLayout.SOUTH);break;}
-	    			jpYouDao.setVisible(true);
+	    		     jpYouDao.setVisible(true);
 	    		}
 	    		if(bingSelected)
 	    		{
@@ -333,8 +362,10 @@ public class FrontPage extends JFrame{
 	    			{case 1:{jpMeaning.add(jpBing,BorderLayout.NORTH);sendMeaning=meaningOfBing;}break;
 	    			 case 2:jpMeaning.add(jpBing,BorderLayout.CENTER);break;
 	    			 case 3:jpMeaning.add(jpBing,BorderLayout.SOUTH);break;}
-	    			jpBing.setVisible(true);
+	    			 jpBing.setVisible(true);
 	    		}
+	    		
+	    	//	jpMeaning.repaint();
 	    	}
 	    });
 	    //点赞
