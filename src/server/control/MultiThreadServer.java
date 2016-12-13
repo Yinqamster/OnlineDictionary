@@ -90,7 +90,7 @@ public class MultiThreadServer extends JFrame{
 								ud.setStateOn(words[1]);
 					//			ud.getOnlineUser();
 								outputToClient.write("1\n");
-								
+								UserController.getInstance().nameRecord(words[1], socket.getInetAddress().getHostAddress());
 							}
 							else {
 								outputToClient.write("2\n");
@@ -148,6 +148,18 @@ public class MultiThreadServer extends JFrame{
 							ud.writeZan(words[1], words[3], words[4]);
 						}
 					}
+					else if(words[0].equals("5")) {
+						String ip = UserController.getInstance().getIpByName(words[1]);
+						Socket socketSend = UserController.getInstance().getSocketByIp(ip);
+						System.out.println(ip + "ok" + socketSend + "hh");
+						BufferedWriter outputWordCard = new BufferedWriter(new OutputStreamWriter(socketSend.getOutputStream()));
+						outputWordCard.write(words[2] + " " + words[3] + " " + words[4] + "\n");
+						outputWordCard.flush();
+					}
+					
+					
+					
+					
 					outputToClient.flush();
 			//		outputToClient.writeChars("ok !!");
 					jta.append("requests received from client:");

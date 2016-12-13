@@ -83,7 +83,7 @@ public class FrontPage extends JFrame{
 	private JTextField jtfBaiDu = new JTextField(50); 
 	private JTextField jtfBing = new JTextField(50); 
 	private JTextField jtfYouDao = new JTextField(50); 
-	JList jlist=new JList(new String[]{"item1","item2","item3"});
+	JList jlist=new JList();
 	DefaultListModel dfList=new DefaultListModel();
 	//DefaultListSelectionModel slList=new DefaultListSelectionModel();
 	String userName=null;                                      ///用户名在登录的时候传入          
@@ -121,6 +121,10 @@ public class FrontPage extends JFrame{
 		try {
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		/*	while (true) {
+				String str = fromServer.readLine();
+				System.out.println(str + "okla");
+			}*/
 		}
 		catch(IOException ex) {
 			System.out.println(ex);
@@ -485,7 +489,7 @@ public class FrontPage extends JFrame{
 		//查看我的单词卡
 		viewMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new WordCardSet(numOfWordCard);
+				WordCardSet set=new WordCardSet(numOfWordCard);
 			}
 		});
 		makeCard.addActionListener(new ActionListener(){
@@ -502,29 +506,48 @@ public class FrontPage extends JFrame{
 					System.err.println(ex);
 				}*/
 				jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-				//Object[] names=jlist.getSelectedValues();
-				//@SuppressWarnings("deprecation")
-				List names=jlist.getSelectedValuesList();
 				jlist.repaint();
 				numOfWordCard++;
 				String word=jtfInput.getText();
 				WordCard wordcard=new WordCard(userName,word,sendMeaning);
 				try {
 					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("D:\\desktop\\"+numOfWordCard+".png"),500,300);
+					File s=new File("D:\\desktop\\"+numOfWordCard+".png");
+					s.canWrite();
+					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),s,500,300);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				WordCardSet set=new WordCardSet(numOfWordCard);
 			}
 		});
-		//
-		/*jlist.addListSelectionListener(new ListSelectionListener(){
+		//发送给指定的用户，点击jlist选择
+		jlist.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
-				@SuppressWarnings("deprecation")
-				Object[] names=jlist.getSelectedValues();
+				//@SuppressWarnings("deprecation")
+				String names=jlist.getSelectedValuesList().toString();
+				names = names.substring(1, names.length()-1); 
+				//System.out.println(names.get(0));
+				jlist.repaint();
+				String word=jtfInput.getText();
+				WordCard wordcard=new WordCard(userName,word,sendMeaning);
+				
+				System.out.println(names + " " + word + " " + sendMeaning);
+				
+				try {
+					toServer.write("5 " + names + " " + userName + " " + word + " " + sendMeaning + "\n");
+					toServer.flush();
+					
+					
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
+				}
+				
 			}
-		});*/
+		});
 		//���͵��ʿ�	
 	}
 /*	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
@@ -602,9 +625,9 @@ public class FrontPage extends JFrame{
 		for (int i = 0; i < 6; i++) {// 256 340 0 680
 			g.drawString(str, i * 680, y);// 画出字符串
 		}*/
-		g.drawString(word.getUserName(),20,50);// 画出字符串
-		g.drawString(word.getWord(),20,150);
-		g.drawString(word.getExplanation(),20,250);
+		g.drawString("User: "+word.getUserName(),20,50);// 画出字符串
+		g.drawString("Word: "+word.getWord(),20,150);
+		g.drawString("Meaning: "+word.getExplanation(),20,250);
 		g.dispose();
 		ImageIO.write(image, "png", outFile);// 输出png图片
 	}

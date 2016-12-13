@@ -15,6 +15,7 @@ public class WordCardSet extends JFrame{
 	private JButton jbtNext=new JButton("Next");
 	private JButton jbtPrevious=new JButton("Previous");
 	private JButton jbtLast=new JButton("Last");
+	private JButton jbtOK=new JButton("Ok");
 	//private JButton jbtsend=new JButton("send");
 	//private JButton jbtdelete=new JButton("delete");
 	private int num_of_wordcard;
@@ -27,6 +28,7 @@ public class WordCardSet extends JFrame{
 		jbtNext.setFont(font);
 		jbtPrevious.setFont(font);
 		jbtLast.setFont(font);
+		jbtOK.setFont(font);
 		//jbtsend.setFont(font);
 		//jbtdelete.setFont(font);
 		cardpanel.setBorder(new LineBorder(Color.BLACK));
@@ -38,7 +40,9 @@ public class WordCardSet extends JFrame{
 		JPanel p=new JPanel();
 		for(int i=1;i<=num_of_wordcard;i++)
 		{
+
 			ImageIcon icon=new ImageIcon("D:\\desktop\\"+i+".png");
+//			ImageIcon icon=new ImageIcon("C:\\Users\\aviva\\Desktop\\WordCard\\"+i+".png");
 			icon.setImage((icon.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT)));
 			JLabel label=new JLabel(icon);
 			//cardpanel.add(word[i],String.valueOf(i));
@@ -48,6 +52,7 @@ public class WordCardSet extends JFrame{
 		p.add(jbtNext);
 		p.add(jbtPrevious);
 		p.add(jbtLast);
+		p.add(jbtOK);
 		//p.add(jbtsend);
 		//p.add(jbtdelete);
 		add(p,BorderLayout.SOUTH);
@@ -76,6 +81,13 @@ public class WordCardSet extends JFrame{
 			public void actionPerformed(ActionEvent e)
 			{
 				cardlayout.last(cardpanel);
+			}
+		});
+		jbtOK.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				//cardlayout.last(cardpanel);
+				setVisible(false);
 			}
 		});
 	}
