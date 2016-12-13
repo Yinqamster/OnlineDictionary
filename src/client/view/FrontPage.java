@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
@@ -107,6 +108,9 @@ public class FrontPage extends JFrame{
 	JButton zanYouDao=new JButton(img);
 	public FrontPage(String UserName, Socket socket)   
 	{
+		likeOFBaiDu=0;
+		likeOFYouDao=0;
+		likeOFBing=0;
 		try {
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -235,9 +239,9 @@ public class FrontPage extends JFrame{
 	    		zanBing.setIcon(img);
 	    		zanYouDao.setIcon(img);
 	    		String word=jtfInput.getText();
-	    		String meaningOfBaidu=null;
-	    		String meaningOfBing=null;
-	    		String meaningOfYouDao=null;
+	    		String meaningOfBaidu="";
+	    		String meaningOfBing="";
+	    		String meaningOfYouDao="";
 	    		boolean baiduSelected=jcBaidu.isSelected();
 	    		boolean youDaoSelected=jcYouDao.isSelected();
 	    		boolean bingSelected=jcBing.isSelected();
@@ -280,15 +284,33 @@ public class FrontPage extends JFrame{
 		    				meaningOfBing=deal.getMeaningFromBing(word);
 		    				jtfBing.setText(meaningOfBing);
 		    			}
-		    			toServer.flush();
+		    	//		toServer.flush();
 	    			}
 	    			catch(IOException ex) {
 						System.out.println(ex);
 					}
 	    		}
-	    		int placeOfBaidu=getPlace(likeOFBaiDu,likeOFYouDao,likeOFBing);
+	    		
+	    		int placeOfBaidu = 1;
+	    		int placeOfYouDao = 2;
+	    		int placeOfBing = 3;
+	    		
+	    		int[][] pos = {{likeOFBaiDu, 1},{likeOFYouDao, 2},{likeOFBing, 3}};
+	    		pos = getPlace(pos);
+	    		for (int i = 0; i < 3; i++) {
+	    			if(pos[i][1] == 1) {
+	    				placeOfBaidu=pos[i][0];
+	    			}
+	    			else if(pos[i][1] == 2) {
+	    				placeOfYouDao=pos[i][0];
+	    			}
+	    			else if(pos[i][1] == 3) {
+	    				placeOfBing=pos[i][0];
+	    			}
+	    		}
+	    /*		int placeOfBaidu=getPlace(likeOFBaiDu,likeOFYouDao,likeOFBing);
 	    		int placeOfBing=getPlace(likeOFBing,likeOFBaiDu,likeOFYouDao);
-	    		int placeOfYouDao=getPlace(likeOFYouDao,likeOFBing,likeOFBaiDu);
+	    		int placeOfYouDao=getPlace(likeOFYouDao,likeOFBing,likeOFBaiDu);*/
 	    		if(baiduSelected)
 	    		{
 	    			switch(placeOfBaidu)
@@ -441,14 +463,61 @@ public class FrontPage extends JFrame{
 		});
 		//���͵��ʿ�	
 	}
-	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
+/*	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
 	{
-		if (a>b&&a>c)
+		if (a>=b&&a>=c)
 			return 1;
-		else if((b>a&&a>c)||(c>a&&a>b))
+		else if((b>=a&&a>=c)||(c>=a&&a>=b))
 			return 2;
 		else
 			return 3;
+	}*/
+	
+	void sort(int[][] pos) {
+		int[] temp1 = {pos[0][0], pos[1][0], pos[2][0]};
+		int[] temp2 = {pos[0][1], pos[1][1], pos[2][1]};
+		int a, b;
+		for (int i = 0; i < 2; i++) {
+			for (int j = i+1; j < 3; j++) {
+				if (temp1[i] >= temp1[j]) {
+					a = temp1[i];
+					temp1[i] = temp1[j];
+					temp1[j] = a;
+					b = temp2[i];
+					temp2[i] = temp2[j];
+					temp2[j] = b;
+				}
+			}
+		}
+		
+		for (int i = 0; i < 3; i++) {
+			pos[i][0] = temp1[i];
+			pos[i][1] = temp2[i];
+		}
+		for (int i = 0; i < 3; i++) {
+			System.out.println(pos[i][0] + " " + pos[i][1]);
+		}
+	}
+	
+	int[][] getPlace(int[][] pos) {
+		
+		for (int i = 0; i < 2; i++) {
+			for (int j = i+1; j < 3; j++) {
+				sort(pos);
+				if (pos[i][0] == pos[j][0]) {
+					pos[j][0]++;
+				}
+			}
+		}
+		
+		
+		for (int i = 0; i < 3; i++) {
+			System.out.println(pos[i][0] + " " + pos[i][1]);
+		}
+		pos[0][0] = 3;
+		pos[1][0] = 2;
+		pos[2][0] = 1;
+		return pos;
 	}
 	
 	/*
