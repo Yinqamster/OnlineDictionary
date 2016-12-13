@@ -134,6 +134,17 @@ public class MultiThreadServer extends JFrame{
 						ud.setStateOff(words[1]);
 						outputToClient.write("1\n");
 					}
+					else if (words[0].equals("4")) {  //获取点赞数
+						if (words[2].equals("get")) {
+							System.out.println("ok");
+							String str = ud.getZan(words[1], words[3]);
+			//				System.out.println(str);
+							outputToClient.write(str + "\n");
+						}
+						else if(words[2].equals("write")) {
+							ud.writeZan(words[1], words[3], words[4]);
+						}
+					}
 					outputToClient.flush();
 			//		outputToClient.writeChars("ok !!");
 					jta.append("requests received from client:");

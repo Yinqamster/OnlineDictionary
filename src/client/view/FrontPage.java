@@ -253,26 +253,38 @@ public class FrontPage extends JFrame{
 	    				youDaoSelected=true;
 	    				bingSelected=true;
 	    			}
-	    			if(baiduSelected)
-	    			{
-	    				//String meaning;
-	    				likeOFBaiDu=5; ///从数据库获取
-	    				meaningOfBaidu = deal.getMeaningFromBaiDu(word);
-	    				jtfBaiDu.setText(meaningOfBaidu);
-	    		//		System.out.println(meaning);
+	    			try {
+		    			if(baiduSelected)
+		    			{
+		    				//String meaning;
+		    				toServer.write("4 baidu get " + word + "\n");
+							toServer.flush();
+							likeOFBaiDu = Integer.parseInt(fromServer.readLine()); ///从数据库获取
+		    				meaningOfBaidu = deal.getMeaningFromBaiDu(word);
+		    				jtfBaiDu.setText(meaningOfBaidu);
+		    		//		System.out.println(meaning);
+		    			}
+		    			if(youDaoSelected)
+		    			{
+		    				toServer.write("4 youdao get " + word + "\n");
+							toServer.flush();
+		    				likeOFYouDao = Integer.parseInt(fromServer.readLine());;  ///从数据库获取
+		    				meaningOfYouDao=deal.getMeaningFromYouDao(word);
+		    				jtfYouDao.setText(meaningOfYouDao);
+		    			}
+		    			if(bingSelected)
+		    			{
+		    				toServer.write("4 bing get " + word + "\n");
+							toServer.flush();
+		    				likeOFBing = Integer.parseInt(fromServer.readLine());;    //从数据库获取
+		    				meaningOfBing=deal.getMeaningFromBing(word);
+		    				jtfBing.setText(meaningOfBing);
+		    			}
+		    			toServer.flush();
 	    			}
-	    			if(youDaoSelected)
-	    			{
-	    				likeOFYouDao=8;  ///从数据库获取
-	    				meaningOfYouDao=deal.getMeaningFromYouDao(word);
-	    				jtfYouDao.setText(meaningOfYouDao);
-	    			}
-	    			if(bingSelected)
-	    			{
-	    				likeOFBing=9;    //从数据库获取
-	    				meaningOfBing=deal.getMeaningFromBing(word);
-	    				jtfBing.setText(meaningOfBing);
-	    			}
+	    			catch(IOException ex) {
+						System.out.println(ex);
+					}
 	    		}
 	    		int placeOfBaidu=getPlace(likeOFBaiDu,likeOFYouDao,likeOFBing);
 	    		int placeOfBing=getPlace(likeOFBing,likeOFBaiDu,likeOFYouDao);
@@ -308,23 +320,45 @@ public class FrontPage extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				zanBaiDu.setIcon(imgnew);
 				likeOFBaiDu++;
+				try {
+					toServer.write("4 baidu write " + jtfInput.getText() + " " + UserName + "\n");
+					toServer.flush();
 				//写回数据库
+				}
+				catch(IOException ex) {
+					System.out.println(ex);
+				}
 			}
 		});
 		zanBing.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				 zanBing.setIcon(imgnew);
 		         likeOFBing++;
-		         //写回数据库
+		         try {
+		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + UserName + "\n");
+		        	 toServer.flush();
+				//写回数据库
+				 }
+				 catch(IOException ex) {
+				 	 System.out.println(ex);
+				 }
 			}
 		});
 		zanYouDao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				zanYouDao.setIcon(imgnew);
 				likeOFYouDao++;
+				try {
+					toServer.write("4 youdao write " + jtfInput.getText() + " " + UserName + "\n");
+		        	 toServer.flush();
 				//写回数据库
+				 }
+				 catch(IOException ex) {
+				 	 System.out.println(ex);
+				 }
 			}
 		});
+		
 		//在线离线好友
 		onlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
