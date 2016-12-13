@@ -26,6 +26,13 @@ public class SignInInterface extends JFrame{
 	
 	
 	public SignInInterface(Socket socket) {
+		try {
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		}
+		catch(IOException ex) {
+			System.out.println(ex);
+		}
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
