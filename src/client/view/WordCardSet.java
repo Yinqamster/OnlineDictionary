@@ -38,7 +38,7 @@ public class WordCardSet extends JFrame{
 		JPanel p=new JPanel();
 		for(int i=1;i<=num_of_wordcard;i++)
 		{
-			ImageIcon icon=new ImageIcon("C:\\Users\\WordCard\\"+i+".png");
+			ImageIcon icon=new ImageIcon("D:\\desktop\\"+i+".png");
 			icon.setImage((icon.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT)));
 			JLabel label=new JLabel(icon);
 			//cardpanel.add(word[i],String.valueOf(i));

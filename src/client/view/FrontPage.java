@@ -510,7 +510,7 @@ public class FrontPage extends JFrame{
 				String word=jtfInput.getText();
 				WordCard wordcard=new WordCard(userName,word,sendMeaning);
 				try {
-					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("C:\\Users\\WordCard\\"+numOfWordCard+".png"),500,300);
+					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("D:\\desktop\\"+numOfWordCard+".png"),500,300);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

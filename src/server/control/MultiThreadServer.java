@@ -46,6 +46,8 @@ public class MultiThreadServer extends JFrame{
 				
 				HandleAClient task = new HandleAClient(socket);
 				
+				UserController.getInstance().ipRecord(inetAddress.getHostAddress(), socket);
+				System.out.println(socket);
 				new Thread(task).start();
 				
 				clientNo++;
@@ -79,6 +81,7 @@ public class MultiThreadServer extends JFrame{
 //					String words[] = inputFromClient.read().split("\\s");
 					String words[] = inputFromClient.readLine().split("\\s");
 					if (words[0].equals("0")) {  //登录
+						System.out.println(UserController.getInstance().getSocketByIp(socket.getInetAddress().getHostAddress()));
 						if(!ud.nameExists(words[1])) {
 							outputToClient.write("0\n");
 						}
