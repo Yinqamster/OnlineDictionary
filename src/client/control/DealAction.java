@@ -170,7 +170,6 @@ public class DealAction {
 			//System.out.println("原文:" + query.getText());
 			paragraph = (Element) root.element("translation")
 					.element("paragraph");
-			
 			//System.out.println("翻译:" + paragraph.getText());
 			}
 		catch (ClientProtocolException e) {

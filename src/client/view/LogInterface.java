@@ -57,7 +57,6 @@ public class LogInterface extends JFrame{
 		
 		try {
 			Socket socket = new Socket("114.212.132.167", 8000);
-			
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			
