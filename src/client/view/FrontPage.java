@@ -1,22 +1,30 @@
 package client.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
@@ -35,12 +43,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class FrontPage extends JFrame{
 	private BufferedWriter toServer;
 	private BufferedReader fromServer;
 	
-	
+	int numOfWordCard=0;
 	private client.control.UserDatabase database=new client.control.UserDatabase();
 	private client.control.DealAction deal=new client.control.DealAction();
 	private Font font=new Font("Microsoft YaHei UI",0,20);
@@ -73,9 +83,9 @@ public class FrontPage extends JFrame{
 	private JTextField jtfBaiDu = new JTextField(50); 
 	private JTextField jtfBing = new JTextField(50); 
 	private JTextField jtfYouDao = new JTextField(50); 
-	JList jlist=new JList();
+	JList jlist=new JList(new String[]{"item1","item2","item3"});
 	DefaultListModel dfList=new DefaultListModel();
-	DefaultListSelectionModel slList=new DefaultListSelectionModel();
+	//DefaultListSelectionModel slList=new DefaultListSelectionModel();
 	String userName=null;                                      ///用户名在登录的时候传入          
 	String sendMeaning=null;                                   ///要发送的意思，默认为点赞数最多的那个
 	JMenuBar jmb=new JMenuBar();
@@ -115,7 +125,8 @@ public class FrontPage extends JFrame{
 		catch(IOException ex) {
 			System.out.println(ex);
 		}
-		
+		//////////////////////////////////////不知道能不能这么写
+		/////////////////////////////////////////////////jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		userName=UserName;
 		JMenu userMenu=new JMenu(UserName);
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
@@ -364,7 +375,7 @@ public class FrontPage extends JFrame{
 	    			 case 3:jpMeaning.add(jpBing,BorderLayout.SOUTH);break;}
 	    			 jpBing.setVisible(true);
 	    		}
-	    		
+	    		System.out.println(sendMeaning);
 	    	//	jpMeaning.repaint();
 	    	}
 	    });
@@ -454,8 +465,7 @@ public class FrontPage extends JFrame{
 				}
 			}
 		});
-		//look at user word card
-		//有机会再实现吧~
+		//退出登录
 		logoutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				try {
@@ -472,9 +482,10 @@ public class FrontPage extends JFrame{
 				}
 			}
 		});
-		
+		//查看我的单词卡
 		viewMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				new WordCardSet(numOfWordCard);
 			}
 		});
 		makeCard.addActionListener(new ActionListener(){
@@ -490,8 +501,30 @@ public class FrontPage extends JFrame{
 				{
 					System.err.println(ex);
 				}*/
+				jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				//Object[] names=jlist.getSelectedValues();
+				//@SuppressWarnings("deprecation")
+				List names=jlist.getSelectedValuesList();
+				jlist.repaint();
+				numOfWordCard++;
+				String word=jtfInput.getText();
+				WordCard wordcard=new WordCard(userName,word,sendMeaning);
+				try {
+					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("C:\\Users\\WordCard\\"+numOfWordCard+".png"),500,300);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
+		//
+		/*jlist.addListSelectionListener(new ListSelectionListener(){
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				@SuppressWarnings("deprecation")
+				Object[] names=jlist.getSelectedValues();
+			}
+		});*/
 		//���͵��ʿ�	
 	}
 /*	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
@@ -550,7 +583,31 @@ public class FrontPage extends JFrame{
 		pos[2][0] = 1;
 		return pos;
 	}
-	
+	public static void createImage(client.view.WordCard word,Font font, File outFile,
+			Integer width, Integer height) throws Exception {
+		BufferedImage image = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_BGR);
+		Graphics g = image.getGraphics();
+		g.setClip(0, 0, width, height);
+		g.setColor(Color.black);
+		g.fillRect(0, 0, width, height);// 先用黑色填充整张图片,也就是背景
+		g.setColor(Color.red);// 在换成黑色
+		g.setFont(font);// 设置画笔字体
+		/** 用于获得垂直居中y */
+		/*Rectangle clip = g.getClipBounds();
+		FontMetrics fm = g.getFontMetrics(font);
+		int ascent = fm.getAscent();
+		int descent = fm.getDescent();
+		int y = (clip.height - (ascent + descent)) / 2 + ascent;
+		for (int i = 0; i < 6; i++) {// 256 340 0 680
+			g.drawString(str, i * 680, y);// 画出字符串
+		}*/
+		g.drawString(word.getUserName(),20,50);// 画出字符串
+		g.drawString(word.getWord(),20,150);
+		g.drawString(word.getExplanation(),20,250);
+		g.dispose();
+		ImageIO.write(image, "png", outFile);// 输出png图片
+	}
 	/*
 	public static void main(String[] args)
 	{

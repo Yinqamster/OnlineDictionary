@@ -1,4 +1,5 @@
 package client.control;
+import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.*;
 import java.util.List;
@@ -183,5 +185,7 @@ public class DealAction {
 		}
 		return paragraph.getText();
 	}
+	//生成图片
+	
 }
 	

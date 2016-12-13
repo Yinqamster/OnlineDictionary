@@ -1,4 +1,4 @@
-/*package client.view;
+package client.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,40 +15,44 @@ public class WordCardSet extends JFrame{
 	private JButton jbtNext=new JButton("Next");
 	private JButton jbtPrevious=new JButton("Previous");
 	private JButton jbtLast=new JButton("Last");
-	private JButton jbtsend=new JButton("send");
-	private JButton jbtdelete=new JButton("delete");
-	private int num_of_wordcard=3;
+	//private JButton jbtsend=new JButton("send");
+	//private JButton jbtdelete=new JButton("delete");
+	private int num_of_wordcard;
 	//WordCard[] word=new WordCard[50];
 	
-	public  WordCardSet()
+	public  WordCardSet(int num_of_wordcard)
 	{
+		this.num_of_wordcard=num_of_wordcard;
 		jbtFirst.setFont(font);
 		jbtNext.setFont(font);
 		jbtPrevious.setFont(font);
 		jbtLast.setFont(font);
-		jbtsend.setFont(font);
-		jbtdelete.setFont(font);
+		//jbtsend.setFont(font);
+		//jbtdelete.setFont(font);
 		cardpanel.setBorder(new LineBorder(Color.BLACK));
-		setSize(600,500);
+		setSize(800,800);
 		setTitle("Word Card Set");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		JPanel p=new JPanel();
-		for(int i=0;i<num_of_wordcard;i++)
+		for(int i=1;i<=num_of_wordcard;i++)
 		{
+			ImageIcon icon=new ImageIcon("C:\\Users\\WordCard\\"+i+".png");
+			icon.setImage((icon.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT)));
+			JLabel label=new JLabel(icon);
 			//cardpanel.add(word[i],String.valueOf(i));
-			cardpanel.add(new WordCard("1","2","3"), String.valueOf(i));
+			cardpanel.add(label, String.valueOf(i));
 		}
 		p.add(jbtFirst);
 		p.add(jbtNext);
 		p.add(jbtPrevious);
 		p.add(jbtLast);
-		p.add(jbtsend);
-		p.add(jbtdelete);
+		//p.add(jbtsend);
+		//p.add(jbtdelete);
 		add(p,BorderLayout.SOUTH);
 		add(cardpanel,BorderLayout.CENTER);
-		JPanel[] word=new JPanel[5]
+		pack();
 		//first word card is the word card added recently
 		jbtFirst.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
@@ -74,32 +78,9 @@ public class WordCardSet extends JFrame{
 				cardlayout.last(cardpanel);
 			}
 		});
-		jbtsend.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				
-			}
-		});
-		jbtdelete.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-			
-			}
-		});
 	}
-	boolean addWordCard(String userName,String word,String explanation)
+	/*public static void main(String[] args)
 	{
-		
-		if(num_of_wordcard>=49)
-		{
-			JOptionPane.showMessageDialog(null,"The set is full","Notice",JOptionPane.INFORMATION_MESSAGE);
-			return false;
-		}
-		JPanel jpword=new JPanel(new GridLayout(3,1));
-		
-	}
-	public static void main(String[] args)
-	{
-		WordCardSet n=new WordCardSet();
-	}
-}*/
+		WordCardSet n=new WordCardSet(4);
+	}*/
+}
