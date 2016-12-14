@@ -54,7 +54,9 @@ public class FrontPage extends JFrame{
 	private BufferedWriter toServer;
 	private BufferedReader fromServer;
 //	InteractionWithServer task;
-	
+	int judgezanbaidu=0; //判断是点赞还是取消
+	int judgezanyoudao=0;
+	int judgezanbing=0;
 	int numOfWordCard=0;
 	private client.control.UserDatabase database=new client.control.UserDatabase();
 	private client.control.DealAction deal=new client.control.DealAction();
@@ -422,8 +424,17 @@ public class FrontPage extends JFrame{
 	    //点赞
 		zanBaiDu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				judgezanbaidu++;
+				if(judgezanbaidu%2==1)
+				{
 				zanBaiDu.setIcon(imgnew);
 				likeOFBaiDu++;
+				}
+				else
+				{
+					zanBaiDu.setIcon(img);
+					likeOFBaiDu--;
+				}
 				try {
 					toServer.write("4 baidu write " + jtfInput.getText() + " " + UserName + "\n");
 					toServer.flush();
@@ -436,8 +447,15 @@ public class FrontPage extends JFrame{
 		});
 		zanBing.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				judgezanbing++;
+				if(judgezanbing%2==1)
+				{
 				 zanBing.setIcon(imgnew);
-		         likeOFBing++;
+		         likeOFBing++;}
+				else{
+				zanBing.setIcon(img);
+				likeOFBing--;
+				}
 		         try {
 		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + UserName + "\n");
 		        	 toServer.flush();
@@ -450,8 +468,16 @@ public class FrontPage extends JFrame{
 		});
 		zanYouDao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				judgezanyoudao++;
+				if(judgezanyoudao%2==1)
+				{
 				zanYouDao.setIcon(imgnew);
-				likeOFYouDao++;
+				likeOFYouDao++;}
+				else
+				{
+				zanYouDao.setIcon(img);
+				likeOFYouDao--;
+				}
 				try {
 					toServer.write("4 youdao write " + jtfInput.getText() + " " + UserName + "\n");
 		        	 toServer.flush();
@@ -550,6 +576,7 @@ public class FrontPage extends JFrame{
 				WordCardSet set=new WordCardSet(numOfWordCard);
 			}
 		});
+		//生成单词卡
 		makeCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				/*String word=jtfInput.getText();
@@ -577,7 +604,8 @@ public class FrontPage extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				WordCardSet set=new WordCardSet(numOfWordCard);
+				//WordCardSet set=new WordCardSet(numOfWordCard);
+				JOptionPane.showMessageDialog(null,"生成成功!可点击查看菜单查看或点击左侧用户发送","Notice",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		//发送给指定的用户，点击jlist选择
