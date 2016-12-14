@@ -18,11 +18,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
@@ -46,9 +49,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 public class FrontPage extends JFrame{
 	private BufferedWriter toServer;
 	private BufferedReader fromServer;
+//	InteractionWithServer task;
 	
 	int numOfWordCard=0;
 	private client.control.UserDatabase database=new client.control.UserDatabase();
@@ -121,14 +126,33 @@ public class FrontPage extends JFrame{
 		try {
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		/*	while (true) {
-				String str = fromServer.readLine();
-				System.out.println(str + "okla");
-			}*/
+	//		task = new InteractionWithServer(socket);
+	//		task.start();
+		//	while (true) {
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(new TimerTask() {  
+	            public void run() {  
+	  //              System.out.println("-------设定要指定任务--------"); 
+	                try {
+		                Receive task = new Receive(socket);
+		    //			new Thread(task).start();;
+		                Thread t = new Thread(task);
+		    			t.start();
+		    			t.join();
+		    			t = null;
+	            	}
+	            	catch(InterruptedException i) {
+	            		System.out.println(i);
+	            	}
+	            }  
+	        }, 1000, 10000);
+			
+		//	}
 		}
 		catch(IOException ex) {
 			System.out.println(ex);
 		}
+		
 		//////////////////////////////////////不知道能不能这么写
 		/////////////////////////////////////////////////jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		userName=UserName;
@@ -295,8 +319,10 @@ public class FrontPage extends JFrame{
 		    				seleNo++;
 		    				toServer.write("4 baidu get " + word + "\n");
 							toServer.flush();
+					//		task.join(100);
 							likeOFBaiDu = Integer.parseInt(fromServer.readLine()); ///从数据库获取
-		    				meaningOfBaidu = deal.getMeaningFromBaiDu(word);
+					//		likeOFBaiDu = Integer.parseInt(task.getResStr());
+							meaningOfBaidu = deal.getMeaningFromBaiDu(word);
 		    				jtfBaiDu.setText(meaningOfBaidu);
 		    		//		System.out.println(meaning);
 		    			}
@@ -306,8 +332,11 @@ public class FrontPage extends JFrame{
 		    				seleNo++;
 		    				toServer.write("4 youdao get " + word + "\n");
 							toServer.flush();
-		    				likeOFYouDao = Integer.parseInt(fromServer.readLine());;  ///从数据库获取
-		    				meaningOfYouDao=deal.getMeaningFromYouDao(word);
+					//		task.join(100);
+							
+		    				likeOFYouDao = Integer.parseInt(fromServer.readLine());  ///从数据库获取
+						//	likeOFYouDao = Integer.parseInt(task.getResStr());
+							meaningOfYouDao=deal.getMeaningFromYouDao(word);
 		    				jtfYouDao.setText(meaningOfYouDao);
 		    			}
 		    			if(bingSelected)
@@ -316,7 +345,10 @@ public class FrontPage extends JFrame{
 		    				seleNo++;
 		    				toServer.write("4 bing get " + word + "\n");
 							toServer.flush();
-		    				likeOFBing = Integer.parseInt(fromServer.readLine());;    //从数据库获取
+					//		task.join(100);
+							
+		    				likeOFBing = Integer.parseInt(fromServer.readLine());    //从数据库获取
+		    			//	likeOFBing = Integer.parseInt(task.getResStr()); 
 		    				meaningOfBing=deal.getMeaningFromBing(word);
 		    				jtfBing.setText(meaningOfBing);
 		    			}
@@ -325,6 +357,10 @@ public class FrontPage extends JFrame{
 	    			catch(IOException ex) {
 						System.out.println(ex);
 					}
+	    	/*		catch(InterruptedException i) {
+						System.out.println(i);
+					}*/
+	    			
 	    		}
 	    		else {
 	    			jtfBaiDu.setText(meaningOfBaidu);
@@ -436,17 +472,25 @@ public class FrontPage extends JFrame{
 				try {
 					toServer.write("2 " + "on" + "\n");
 					toServer.flush();
+					
+				//	task.join(1000);
 					String res = fromServer.readLine();
+				//	String res = task.getResStr();
 				//	System.out.println(res);
-					String[] onlineusers=res.split(" ");
-					dfList.addElement("Online User :");
-					for(int i=0;i<onlineusers.length;i++)
-						dfList.addElement(onlineusers[i]);
-					jlist.setModel(dfList);
+					String[] onlineusers=res.split(" ");	
+					if (onlineusers[0].equals("on")) {
+						dfList.addElement("Online User :");
+						for(int i=1;i<onlineusers.length;i++)
+							dfList.addElement(onlineusers[i]);
+						jlist.setModel(dfList);
+					}
 				}
 				catch(IOException ex) {
 					System.out.println(ex);
 				}
+		/*		catch(InterruptedException i) {
+					System.out.println(i);
+				}*/
 				
 			}
 		});
@@ -457,16 +501,24 @@ public class FrontPage extends JFrame{
 				try {
 					toServer.write("2 " + "off" + "\n");
 					toServer.flush();
+			//		task.join(1000);
 					String res = fromServer.readLine();
-					String[] offlineusers=database.getOfflineUser().split(" ");
-					dfList.addElement("Offline User :");
-					for(int i=0;i<offlineusers.length;i++)
-						dfList.addElement(offlineusers[i]);
-					jlist.setModel(dfList);
+				//	String res = task.getResStr();
+				//	String[] offlineusers=database.getOfflineUser().split(" ");
+					String[] offlineusers=res.split(" ");
+					if (offlineusers[0].equals("off")) {
+						dfList.addElement("Offline User :");
+						for(int i=1;i<offlineusers.length;i++)
+							dfList.addElement(offlineusers[i]);
+						jlist.setModel(dfList);
+					}
 				}
 				catch(IOException ex) {
 					System.out.println(ex);
 				}
+		/*		catch(InterruptedException i) {
+					System.out.println(i);
+				}*/
 			}
 		});
 		//退出登录
@@ -475,15 +527,21 @@ public class FrontPage extends JFrame{
 				try {
 					toServer.write("3 " + UserName + "\n");
 					toServer.flush();
+				//	task.join(100);
 					int res = Integer.parseInt(fromServer.readLine());
-					if (res == 1) {
+				//	int res = task.getResNum();
+					if (res == 3) {
 						FrontPage.this.setVisible(false);
+					//	task = null;
 						new LogInterface();
 					}
 				}
 				catch(IOException ex) {
 					System.out.println(ex);
 				}
+		/*		catch(InterruptedException i) {
+					System.out.println(i);
+				}*/
 			}
 		});
 		//查看我的单词卡
@@ -523,20 +581,27 @@ public class FrontPage extends JFrame{
 			}
 		});
 		//发送给指定的用户，点击jlist选择
+
 		jlist.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
 				//@SuppressWarnings("deprecation")
+								
 				String names=jlist.getSelectedValuesList().toString();
 				names = names.substring(1, names.length()-1); 
 				//System.out.println(names.get(0));
 				jlist.repaint();
 				String word=jtfInput.getText();
-				WordCard wordcard=new WordCard(userName,word,sendMeaning);
+				WordCard wordcard=new WordCard(names, userName,word,sendMeaning);
 				
-				System.out.println(names + " " + word + " " + sendMeaning);
+		//		System.out.println(names + " " + word + " " + sendMeaning);
+				
+		//		System.out.println("times");
 				
 				try {
+				//	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				//	out.writeObject(wordcard);
+				//	out.flush();
 					toServer.write("5 " + names + " " + userName + " " + word + " " + sendMeaning + "\n");
 					toServer.flush();
 					
@@ -548,8 +613,15 @@ public class FrontPage extends JFrame{
 				
 			}
 		});
+//		receive();
 		//���͵��ʿ�	
-	}
+//		try {
+		//	while (true) {
+		//	Receive task = new Receive(socket);
+		//	new Thread(task).start();
+		//	}
+		}
+	//
 /*	int getPlace(int a,int b,int c)    //第一个参数为需要判定位置的数
 	{
 		if (a>=b&&a>=c)
@@ -631,9 +703,61 @@ public class FrontPage extends JFrame{
 		g.dispose();
 		ImageIO.write(image, "png", outFile);// 输出png图片
 	}
+	
+
+	
+	
+	class Receive implements Runnable{
+		private BufferedWriter toServer;
+		private BufferedReader fromServer;
+		
+		Socket socket;
+		Receive(Socket socket) {
+			this.socket = socket;
+		}
+		public void run() {
+			try {
+				fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+				
+			//	Timer timer = new Timer();  
+		  //      timer.scheduleAtFixedRate(new TimerTask() {  
+		   //         public void run() {  
+		             //   System.out.println("-------设定要指定任务--------"); 
+		     //       	try {
+		            		toServer.write("receive " + userName + "\n");
+		            		toServer.flush();
+		            		String str = fromServer.readLine();
+		            		System.out.println("receive?? " + str);
+		            		String[] words = str.split(" ");
+		            		if (words[0].equals("yes")) {
+		            			String name = words[1];
+		            			String word = words[2];
+		            			String meaning = words[3];
+		            			System.out.println(name);
+		            			System.out.println(word);
+		            			System.out.println(meaning);
+		            		}
+		//            	}
+		 //           	catch(IOException e) {
+		 //           		System.out.println(e);
+		  //          	}
+		   //         }  
+		  //      }, 1000, 2000);  
+		        
+		        
+			}
+			catch(IOException e){
+				System.out.println(e);
+			}
+		}
+	}
+	
 	/*
 	public static void main(String[] args)
 	{
 		FrontPage page=new FrontPage("Aviva");
 	}*/
 }
+
+

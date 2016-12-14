@@ -1,24 +1,31 @@
 package server.control;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
 
 import client.control.UserDatabase;
+import client.view.WordCard;
 
 public class MultiThreadServer extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	private JTextArea jta = new JTextArea();
+	private List<String> message = new ArrayList<String>();
 	
 	public MultiThreadServer() {
 		setLayout(new BorderLayout());
@@ -73,6 +80,8 @@ public class MultiThreadServer extends JFrame{
 //				DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
 				BufferedWriter outputToClient = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			//	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			//	ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				while(true) {
 			//		double res = inputFromClient.readDouble();
 			//		System.out.println(res);
@@ -124,22 +133,24 @@ public class MultiThreadServer extends JFrame{
 						if (words[1].equals("on")) {
 							String str = ud.getOnlineUser();
 						//	System.out.println(str);
-							outputToClient.write(str + "\n");
+							outputToClient.write("on " + str + "\n");
+							outputToClient.flush();
 						}
 						else if (words[1].equals("off")) {
 							String str = ud.getOfflineUser();
 						//	System.out.println(str);
-							outputToClient.write(str + "\n");
+							outputToClient.write("off " + str + "\n");
+							outputToClient.flush();
 						}
 						
 					}
 					else if (words[0].equals("3")) {  //logout
 						ud.setStateOff(words[1]);
-						outputToClient.write("1\n");
+						outputToClient.write("3\n");
 					}
 					else if (words[0].equals("4")) {  //获取点赞数
 						if (words[2].equals("get")) {
-							System.out.println("ok");
+					//		System.out.println("ok");
 							String str = ud.getZan(words[1], words[3]);
 			//				System.out.println(str);
 							outputToClient.write(str + "\n");
@@ -148,14 +159,51 @@ public class MultiThreadServer extends JFrame{
 							ud.writeZan(words[1], words[3], words[4]);
 						}
 					}
-					else if(words[0].equals("5")) {
-						String ip = UserController.getInstance().getIpByName(words[1]);
+					else if(words[0].equals("5")) {   //发送单词卡  5 接受者 发送者 单词 意思
+						String m = words[1] + " " + words[2] + " " + words[3] + " " + words[4] + "\n";
+						if (!message.contains(m)) {
+							message.add(m);
+				//			
+						}
+						
+			/*			String ip = UserController.getInstance().getIpByName(words[1]);
 						Socket socketSend = UserController.getInstance().getSocketByIp(ip);
 						System.out.println(ip + "ok" + socketSend + "hh");
 						BufferedWriter outputWordCard = new BufferedWriter(new OutputStreamWriter(socketSend.getOutputStream()));
-						outputWordCard.write(words[2] + " " + words[3] + " " + words[4] + "\n");
-						outputWordCard.flush();
+						outputWordCard.write("send " + words[2] + " " + words[3] + " " + words[4] + "\n");
+						outputWordCard.flush();*/
 					}
+					else if(words[0].equals("receive")) {
+						if (!message.isEmpty()) {
+							
+							for (int i = 0; i < message.size(); i++) {
+								String[] send = message.get(i).split(" ");
+						//		System.out.println(message.size() + " " + words[1] + " " + send[0]);
+								if (send[0].equals(words[1])) {
+									outputToClient.write("yes " + send[1] + " " + send[2] + " " + send[3] + "\n");
+						//			System.out.println("ok");
+									message.remove(i);
+									outputToClient.flush();
+									break;
+								}
+								else {
+									outputToClient.write("no\n");
+									outputToClient.flush();
+								}
+							}
+						}
+						else {
+							outputToClient.write("no\n");
+							outputToClient.flush();
+						}
+					}
+					
+			/*		WordCard w = (WordCard)in.readObject();
+					String ip = UserController.getInstance().getIpByName(w.getToUser());
+					Socket socketSend = UserController.getInstance().getSocketByIp(ip);
+					System.out.println(ip + "ok" + socketSend + "hh");
+					out.writeObject(w);
+					out.flush();*/
 					
 					
 					
@@ -172,6 +220,7 @@ public class MultiThreadServer extends JFrame{
 			catch(IOException e){
 				System.out.println(e);
 			}
+			
 		}
 	}
 }

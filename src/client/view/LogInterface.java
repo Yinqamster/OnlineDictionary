@@ -35,6 +35,8 @@ public class LogInterface extends JFrame{
 	JButton jpLog = new JButton("Log In");
 	JButton jpSignIn = new JButton("Sign In");
 	JButton jbtTourOk = new JButton("Go");
+//	InteractionWithServer task;
+	
 	
 	public LogInterface() {
 		
@@ -56,9 +58,19 @@ public class LogInterface extends JFrame{
 		
 		
 		try {
-			Socket socket = new Socket("114.212.132.167", 8000);
+			Socket socket = new Socket("localhost", 8000);
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			
+		//	task = new InteractionWithServer(socket);
+		//	task.start();
+			
+			//new Thread(task).start();
+		//	t = new Thread(task);
+		//	t.start();
+		//	t.join(100);
+	//		sleep(1000);
+	//		t.sleep(1000);
 			
 			bindLogClickEvent(socket);
 			bindSighUpClickEvent(socket);
@@ -67,6 +79,10 @@ public class LogInterface extends JFrame{
 		catch(IOException ex) {
 			System.out.println(ex);
 		}
+	/*	catch(InterruptedException i) {
+			System.out.println(i);
+		}*/
+		
 		
 	}
 	
@@ -155,6 +171,8 @@ public class LogInterface extends JFrame{
 		jpLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					
+					
 					//用户名为空   密码为空   用户名不存在  密码不正确
 					String userName = jtfUser.getText();
 					String userPassword = String.valueOf(jpfPassword.getPassword());
@@ -177,9 +195,14 @@ public class LogInterface extends JFrame{
 						toServer.write("0 " + userName + " " + userPassword + "\n");
 						toServer.flush();
 						int res = Integer.parseInt(fromServer.readLine());
+				//		t.sleep(50);
+				//		task.join(100);
+				//		int res = task.getResNum();
+				//		System.out.println(res);
 						if(res == 0) {
 							LogInterface.this.setVisible(false);
 							JOptionPane.showMessageDialog(null,"User name does not exist！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						//	task = null;
 							new LogInterface();
 							
 					//		new userNameNotExists();
@@ -187,13 +210,15 @@ public class LogInterface extends JFrame{
 						}
 						else {
 							if (res == 1) {
-							//	System.out.println("Login Successful");
+						//		System.out.println("Login Successful");
 								LogInterface.this.setVisible(false);
+						//		task = null;
 								new FrontPage(userName, socket);
 							}
 							else if (res == 2) {
 								LogInterface.this.setVisible(false);
 								JOptionPane.showMessageDialog(null,"Password Error！","Reminder",JOptionPane.INFORMATION_MESSAGE);
+						//		task = null;
 								new LogInterface();
 				//				new passwordNotCorrect();
 					//			System.out.println("密码错误");
@@ -204,6 +229,10 @@ public class LogInterface extends JFrame{
 				catch(IOException ex) {
 					System.out.println(ex);
 				}
+			/*	catch(InterruptedException i) {
+					System.out.println(i);
+				}*/
+				
 			}
 		});
 	}
@@ -227,14 +256,7 @@ public class LogInterface extends JFrame{
 		});
 	}
 	
-	public static void main(String args[]) {
-		LogInterface frame = new LogInterface();
-		frame.setTitle("Online Dictionary");
-		frame.setSize(500, 300);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
+	
 
 }
 
