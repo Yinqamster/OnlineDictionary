@@ -590,14 +590,17 @@ public class FrontPage extends JFrame{
 				{
 					System.err.println(ex);
 				}*/
+				String word=jtfInput.getText();
+				if(word!=null)
+				{
 				jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				jlist.repaint();
 				numOfWordCard++;
-				String word=jtfInput.getText();
+				//String word=jtfInput.getText();
 				WordCard wordcard=new WordCard(userName,word,sendMeaning);
 				try {
-					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("D:\\desktop\\"+numOfWordCard+".png"),500,300);
-					File s=new File("D:\\desktop\\"+numOfWordCard+".png");
+					//createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("D:\\desktop\\"+numOfWordCard+".png"),500,300);
+					File s=new File("C:\\Users\\aviva\\Desktop\\WordCard\\"+numOfWordCard+".png");
 					s.canWrite();
 					createImage(wordcard,new Font("Microsoft YaHei UI",0,20),s,500,300);
 				} catch (Exception e1) {
@@ -606,6 +609,8 @@ public class FrontPage extends JFrame{
 				}
 				//WordCardSet set=new WordCardSet(numOfWordCard);
 				JOptionPane.showMessageDialog(null,"生成成功!可点击查看菜单查看或点击左侧用户发送","Notice",JOptionPane.INFORMATION_MESSAGE);
+				}
+				JOptionPane.showMessageDialog(null,"请先进行单词查询再生成单词卡","Notice",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		//发送给指定的用户，点击jlist选择
@@ -621,11 +626,12 @@ public class FrontPage extends JFrame{
 				jlist.repaint();
 				String word=jtfInput.getText();
 				WordCard wordcard=new WordCard(names, userName,word,sendMeaning);
-				
+				int n=JOptionPane.showConfirmDialog(null,"是否发送给用户"+names,"Notice",JOptionPane.OK_CANCEL_OPTION);
+				System.out.println(n);
 		//		System.out.println(names + " " + word + " " + sendMeaning);
-				
+				if(n==0)
 		//		System.out.println("times");
-				
+				{
 				try {
 				//	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				//	out.writeObject(wordcard);
@@ -637,7 +643,7 @@ public class FrontPage extends JFrame{
 				}
 				catch(IOException ex) {
 					System.out.println(ex);
-				}
+				}}
 				
 			}
 		});
@@ -762,9 +768,20 @@ public class FrontPage extends JFrame{
 		            			String name = words[1];
 		            			String word = words[2];
 		            			String meaning = words[3];
-		            			System.out.println(name);
-		            			System.out.println(word);
-		            			System.out.println(meaning);
+		            			int n=JOptionPane.showConfirmDialog(null,"您收到来自用户"+name+"的单词卡，是否接受?","Notice",JOptionPane.OK_CANCEL_OPTION);
+		            			if(n==0)
+		            			{
+		            				numOfWordCard++;
+		            				WordCard newcard=new WordCard(name,word,meaning);
+		            				File s=new File("C:\\Users\\aviva\\Desktop\\WordCard\\"+numOfWordCard+".png");
+		        					s.canWrite();
+		        					createImage(newcard,new Font("Microsoft YaHei UI",0,20),s,500,300);
+		        					JOptionPane.showMessageDialog(null,"接受成功，可在我的单词卡查看","Notice",JOptionPane.INFORMATION_MESSAGE);
+		        					
+		            			}
+		            			//System.out.println(name);
+		            			//System.out.println(word);
+		            			//System.out.println(meaning);
 		            		}
 		//            	}
 		 //           	catch(IOException e) {
@@ -777,6 +794,9 @@ public class FrontPage extends JFrame{
 			}
 			catch(IOException e){
 				System.out.println(e);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

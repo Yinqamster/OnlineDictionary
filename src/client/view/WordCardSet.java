@@ -35,13 +35,13 @@ public class WordCardSet extends JFrame{
 		setSize(800,800);
 		setTitle("Word Card Set");
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		JPanel p=new JPanel();
 		for(int i=1;i<=num_of_wordcard;i++)
 		{
 
-			ImageIcon icon=new ImageIcon("D:\\desktop\\"+i+".png");
+			ImageIcon icon=new ImageIcon("C:\\Users\\aviva\\Desktop\\WordCard\\"+num_of_wordcard+".png");
 //			ImageIcon icon=new ImageIcon("C:\\Users\\aviva\\Desktop\\WordCard\\"+i+".png");
 			icon.setImage((icon.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT)));
 			JLabel label=new JLabel(icon);
