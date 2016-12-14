@@ -5,8 +5,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -14,12 +12,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 
 import client.control.UserDatabase;
-import client.view.WordCard;
 
 public class MultiThreadServer extends JFrame{
 	private static final long serialVersionUID = 1L;
@@ -50,11 +46,12 @@ public class MultiThreadServer extends JFrame{
 				InetAddress inetAddress = socket.getInetAddress();
 				jta.append("Client " + clientNo + "'s host name is " + inetAddress.getHostName() + '\n');
 				jta.append("Client " + clientNo + "'s IP Address is " + inetAddress.getHostAddress() + '\n');
+				jta.append("Client " + clientNo + "'s socket is " + socket + '\n');
 				
 				HandleAClient task = new HandleAClient(socket);
 				
 				UserController.getInstance().ipRecord(inetAddress.getHostAddress(), socket);
-				System.out.println(socket);
+	//			System.out.println(socket);
 				new Thread(task).start();
 				
 				clientNo++;
@@ -62,12 +59,14 @@ public class MultiThreadServer extends JFrame{
 			
 		}
 		catch(IOException ex) {
+			System.out.println("out");
 			System.out.println(ex);
 		}
 	}
 	
 	class HandleAClient implements Runnable {
 		private Socket socket;
+		String nameOff = "";
 		UserDatabase ud = new UserDatabase();
 		public HandleAClient(Socket socket) {
 			this.socket = socket;
@@ -90,7 +89,7 @@ public class MultiThreadServer extends JFrame{
 //					String words[] = inputFromClient.read().split("\\s");
 					String words[] = inputFromClient.readLine().split("\\s");
 					if (words[0].equals("0")) {  //登录
-						System.out.println(UserController.getInstance().getSocketByIp(socket.getInetAddress().getHostAddress()));
+				//		System.out.println(UserController.getInstance().getSocketByIp(socket.getInetAddress().getHostAddress()));
 						if(!ud.nameExists(words[1])) {
 							outputToClient.write("0\n");
 						}
@@ -98,6 +97,8 @@ public class MultiThreadServer extends JFrame{
 							if (ud.passwordCorrectly(words[1], words[2])) {
 								ud.setStateOn(words[1]);
 					//			ud.getOnlineUser();
+								nameOff = words[1];
+								jta.append("用户"+ words[1] + "已连接\n");
 								outputToClient.write("1\n");
 								UserController.getInstance().nameRecord(words[1], socket.getInetAddress().getHostAddress());
 							}
@@ -210,7 +211,7 @@ public class MultiThreadServer extends JFrame{
 					
 					outputToClient.flush();
 			//		outputToClient.writeChars("ok !!");
-					jta.append("requests received from client:");
+					jta.append("requests received from user"+ nameOff + ":");
 					for (int i = 0; i < words.length; i++) {
 						jta.append(" " + words[i]);
 					}
@@ -219,6 +220,9 @@ public class MultiThreadServer extends JFrame{
 			}
 			catch(IOException e){
 				System.out.println(e);
+				//页面关闭
+				ud.setStateOff(nameOff);
+				jta.append("用户" + nameOff + "断开连接\n");
 			}
 			
 		}

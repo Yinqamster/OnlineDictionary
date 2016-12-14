@@ -23,7 +23,7 @@ public class UserController {
 	}
 	
 	public void ipRecord(String ip, Socket socket) {
-		System.out.println(ip);
+//		System.out.println(ip);
 		ipSocketMap.put(ip, socket);
 	}
 	

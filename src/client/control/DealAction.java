@@ -116,6 +116,7 @@ public class DealAction {
             while ((str = reader.readLine()) != null) {
                 result.append(str).append("\n");
             }
+      //      System.out.println(result);
             try {
 				JSONObject resultJson = new JSONObject(result.toString());
 				 JSONArray array = (JSONArray) resultJson.get("trans_result");
@@ -140,7 +141,8 @@ public class DealAction {
 	public String getMeaningFromBing(String word)
 	{
 		Translate.setClientId("1ef3d644-5a79-433f-ad59-1a042b76ddda");
-		Translate.setClientSecret("Z13DcWtKcLNTtKEWL+XIP81WUqxF01wcQOgGYDW8MSI");
+	//	Translate.setClientSecret("Z13DcWtKcLNTtKEWL+XIP81WUqxF01wcQOgGYDW8MSI");
+		Translate.setClientSecret("xamoWoyARVJXixFIkjFL8hfvZMF0/MPcytUfbnyPRuo=");
 		String translatedText=null;
 		try {
 			translatedText = Translate.execute(word, Language.ENGLISH, Language.CHINESE_SIMPLIFIED);
@@ -162,6 +164,7 @@ public class DealAction {
 			HttpResponse response = client.execute(get);
 			HttpEntity entity = response.getEntity();
 			String str = EntityUtils.toString(entity, "UTF-8");
+			System.out.println(str);
 			org.dom4j.Document doc = (org.dom4j.Document) DocumentHelper
 					.parseText(str);
 			Element root = (Element) doc.getRootElement();

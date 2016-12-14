@@ -41,7 +41,7 @@ public class WordCardSet extends JFrame{
 		for(int i=1;i<=num_of_wordcard;i++)
 		{
 
-			ImageIcon icon=new ImageIcon("C:\\Users\\aviva\\Desktop\\WordCard\\"+num_of_wordcard+".png");
+			ImageIcon icon=new ImageIcon("D:\\Desktop\\"+num_of_wordcard+".png");
 //			ImageIcon icon=new ImageIcon("C:\\Users\\aviva\\Desktop\\WordCard\\"+i+".png");
 			icon.setImage((icon.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT)));
 			JLabel label=new JLabel(icon);
