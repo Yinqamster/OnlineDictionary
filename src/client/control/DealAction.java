@@ -156,7 +156,59 @@ public class DealAction {
 	//get meaning from youdao
 	public String getMeaningFromYouDao(String word)
 	{
-		Element paragraph = null;
+		String text="";
+		//Element paragraph = null;
+		HttpGet get = new HttpGet(
+				"http://fanyi.youdao.com/openapi.do?keyfrom=youdao111&key=60638690&type=data&doctype=xml&version=1.1&q="
+						+ word);
+		try{
+			//HttpResponse response = client.execute(get);
+			//HttpEntity entity = response.getEntity();
+			//String str = EntityUtils.toString(entity, "UTF-8");
+			//JSONObject json = new JSONObject(str);
+			//JSONArray array = (JSONArray) json.get("有道翻译");
+			HttpResponse response = client.execute(get);
+        	HttpEntity entity = response.getEntity();
+        	InputStream returnStream = entity.getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(returnStream,"UTF-8"));
+            StringBuilder result = new StringBuilder();
+            String str = null;
+            while ((str = reader.readLine()) != null) {
+                result.append(str).append("\n");
+            }
+            System.out.println(result);
+            int re1=result.indexOf("<us-phonetic><![CDATA");
+            int re2=result.indexOf("]></us-phonetic>");
+            text+="音标:";
+            text+=result.substring(re1+21, re2);
+            text+="\n基本释义:";
+            re1=result.indexOf("<paragraph><![CDATA[");
+            re2=result.indexOf("]]></paragraph>");
+            text+=result.substring(re1 + 20, re2);
+            text+="\n网络释义:";
+            re1 =result.indexOf("<ex><![CDATA[");
+            re2 =result.indexOf("]]></ex>");
+            text+=result.substring(re1 + 13, re2);
+			/*org.dom4j.Document doc = (org.dom4j.Document) DocumentHelper
+					.parseText(str);
+			Element root = (Element) doc.getRootElement();
+			Element query = root.element("query");
+			List clist = root.elements();
+			//System.out.println("原文:" + query.getText());
+			paragraph = (Element) root.element("translation")
+					.element("paragraph");
+			//System.out.println("翻译:" + paragraph.getText());*/
+			}
+		catch (ClientProtocolException e) {
+			b = false;
+			e.printStackTrace();
+		} catch (IOException e) {
+			b = false;
+			e.printStackTrace();
+		}
+		System.out.println(text);
+		return text;
+/*		Element paragraph = null;
 		HttpGet get = new HttpGet(
 				"http://fanyi.youdao.com/openapi.do?keyfrom=youdao111&key=60638690&type=data&doctype=xml&version=1.1&q="
 						+ word);
@@ -185,7 +237,7 @@ public class DealAction {
 			b = false;
 			e1.printStackTrace();
 		}
-		return paragraph.getText();
+		return paragraph.getText();*/
 	}
 	//生成图片
 	
