@@ -157,7 +157,7 @@ public class MultiThreadServer extends JFrame{
 							outputToClient.write(str + "\n");
 						}
 						else if(words[2].equals("write")) {
-							ud.writeZan(words[1], words[3], words[4]);
+							ud.writeZan(words[1], words[3], words[4], words[5]);
 						}
 					}
 					else if(words[0].equals("5")) {   //发送单词卡  5 接受者 发送者 单词 意思
@@ -222,7 +222,7 @@ public class MultiThreadServer extends JFrame{
 				System.out.println(e);
 				//页面关闭
 				ud.setStateOff(nameOff);
-				jta.append("用户" + nameOff + "断开连接\n");
+	//			jta.append("用户" + nameOff + "断开连接\n");
 			}
 			
 		}

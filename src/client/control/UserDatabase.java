@@ -219,10 +219,10 @@ public class UserDatabase {
 		return numLike;
 	}
 	
-	public void writeZan(String ap, String word, String user) {
+	public void writeZan(String ap, String word, String numOfZan, String user) {
 		
 		String sql0 = "select word from likeNum where word = " + "'" + word + "'";
-		String sql1 = "update likeNum set " + ap + " = " + ap + " + 1 where word = " + "'" + word + "'";
+		String sql1 = "update likeNum set " + ap + " = " + numOfZan + " where word = " + "'" + word + "'";
 		String sql2 = "insert into likeNum (word) values(" + "'" + word + "'" + ")";
 		
 		String sql3 = "select word from user_like where word = " + "'" + word + "'" + " and user_name = " + "'" + user + "'";

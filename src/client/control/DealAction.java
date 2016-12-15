@@ -179,8 +179,10 @@ public class DealAction {
             System.out.println(result);
             int re1=result.indexOf("<us-phonetic><![CDATA");
             int re2=result.indexOf("]></us-phonetic>");
-            text+="音标:";
-            text+=result.substring(re1+21, re2);
+            if (re1 != -1) {
+	            text+="音标:";
+	            text+=result.substring(re1+21, re2);
+            }
             text+="\n基本释义:";
             re1=result.indexOf("<paragraph><![CDATA[");
             re2=result.indexOf("]]></paragraph>");

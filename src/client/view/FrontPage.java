@@ -90,7 +90,7 @@ public class FrontPage extends JFrame{
 	private JTextArea jtfBaiDu = new JTextArea(7, 30); 
 	private JTextArea jtfBing = new JTextArea(7, 30); 
 	private JTextArea jtfYouDao = new JTextArea(7, 30); 
-	JList jlist=new JList();
+	JList jlist=new JList(new String[] {"发送单词卡：","点击用户","群发：","按住Ctrl并点击"});
 	DefaultListModel dfList=new DefaultListModel();
 	//DefaultListSelectionModel slList=new DefaultListSelectionModel();
 	String userName=null;                                      ///用户名在登录的时候传入          
@@ -436,7 +436,7 @@ public class FrontPage extends JFrame{
 					likeOFBaiDu--;
 				}
 				try {
-					toServer.write("4 baidu write " + jtfInput.getText() + " " + UserName + "\n");
+					toServer.write("4 baidu write " + jtfInput.getText() + " " + likeOFBaiDu + " " + UserName + "\n");
 					toServer.flush();
 				//写回数据库
 				}
@@ -457,7 +457,8 @@ public class FrontPage extends JFrame{
 				likeOFBing--;
 				}
 		         try {
-		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + UserName + "\n");
+		        	 System.out.println(likeOFBing);
+		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + likeOFBing + " " + UserName + "\n");
 		        	 toServer.flush();
 				//写回数据库
 				 }
@@ -479,7 +480,7 @@ public class FrontPage extends JFrame{
 				likeOFYouDao--;
 				}
 				try {
-					toServer.write("4 youdao write " + jtfInput.getText() + " " + UserName + "\n");
+					toServer.write("4 youdao write " + jtfInput.getText() + " " + likeOFYouDao + " " + UserName + "\n");
 		        	 toServer.flush();
 				//写回数据库
 				 }
@@ -503,7 +504,12 @@ public class FrontPage extends JFrame{
 					String res = fromServer.readLine();
 				//	String res = task.getResStr();
 				//	System.out.println(res);
-					String[] onlineusers=res.split(" ");	
+					dfList.addElement("发送单词卡：");
+					dfList.addElement("点击用户");
+					dfList.addElement("群发：");
+					dfList.addElement("按住Ctrl并点击");
+					
+					String[] onlineusers=res.split(" ");
 					if (onlineusers[0].equals("on")) {
 						dfList.addElement("Online User :");
 						for(int i=1;i<onlineusers.length;i++)
@@ -531,6 +537,10 @@ public class FrontPage extends JFrame{
 					String res = fromServer.readLine();
 				//	String res = task.getResStr();
 				//	String[] offlineusers=database.getOfflineUser().split(" ");
+					dfList.addElement("发送单词卡：");
+					dfList.addElement("点击用户");
+					dfList.addElement("群发：");
+					dfList.addElement("按住Ctrl并点击");
 					String[] offlineusers=res.split(" ");
 					if (offlineusers[0].equals("off")) {
 						dfList.addElement("Offline User :");
@@ -593,8 +603,7 @@ public class FrontPage extends JFrame{
 				String word=jtfInput.getText();
 				if(word!=null)
 				{
-					jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-					jlist.repaint();
+					
 					numOfWordCard++;
 					//String word=jtfInput.getText();
 					WordCard wordcard=new WordCard(userName,word,sendMeaning);
@@ -621,25 +630,30 @@ public class FrontPage extends JFrame{
 			public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
 				//@SuppressWarnings("deprecation")
-								
+				jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				jlist.repaint();				
 				String names=jlist.getSelectedValuesList().toString();
+				System.out.println(names);
 				names = names.substring(1, names.length()-1); 
 				//System.out.println(names.get(0));
 				jlist.repaint();
 				String word=jtfInput.getText();
 				WordCard wordcard=new WordCard(names, userName,word,sendMeaning);
-				int n=JOptionPane.showConfirmDialog(null,"是否发送给用户"+names,"Notice",JOptionPane.OK_CANCEL_OPTION);
-				System.out.println(n);
+	//			int n=JOptionPane.showConfirmDialog(null,"是否发送给用户"+names,"Notice",JOptionPane.OK_CANCEL_OPTION);
+	//			System.out.println(n);
 		//		System.out.println(names + " " + word + " " + sendMeaning);
-				if(n==0)
+	//			if(n==0)
 		//		System.out.println("times");
-				{
+	//			{
+				String[] tokens=names.split(", ");
 				try {
 				//	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				//	out.writeObject(wordcard);
 				//	out.flush();
-					toServer.write("5 " + names + " " + userName + " " + word + " " + sendMeaning + "\n");
-					toServer.flush();
+					for (int i = 0; i < tokens.length; i++) {
+						toServer.write("5 " + tokens[i] + " " + userName + " " + word + " " + sendMeaning + "\n");
+						toServer.flush();
+					}
 					
 					
 				}
@@ -647,7 +661,7 @@ public class FrontPage extends JFrame{
 					System.out.println(ex);
 				}}
 				
-			}
+	//		}
 		});
 //		receive();
 		//���͵��ʿ�	
