@@ -176,7 +176,7 @@ public class DealAction {
             while ((str = reader.readLine()) != null) {
                 result.append(str).append("\n");
             }
-            System.out.println(result);
+   //         System.out.println(result);
             int re1=result.indexOf("<us-phonetic><![CDATA");
             int re2=result.indexOf("]></us-phonetic>");
             if (re1 != -1) {
@@ -208,7 +208,7 @@ public class DealAction {
 			b = false;
 			e.printStackTrace();
 		}
-		System.out.println(text);
+//		System.out.println(text);
 		return text;
 /*		Element paragraph = null;
 		HttpGet get = new HttpGet(

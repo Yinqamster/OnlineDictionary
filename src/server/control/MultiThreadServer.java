@@ -87,7 +87,8 @@ public class MultiThreadServer extends JFrame{
 					
 //					System.out.println(inputFromClient.readChar());
 //					String words[] = inputFromClient.read().split("\\s");
-					String words[] = inputFromClient.readLine().split("\\s");
+					String getStr = inputFromClient.readLine();
+					String words[] = getStr.split("\\s");
 					if (words[0].equals("0")) {  //登录
 				//		System.out.println(UserController.getInstance().getSocketByIp(socket.getInetAddress().getHostAddress()));
 						if(!ud.nameExists(words[1])) {
@@ -157,13 +158,14 @@ public class MultiThreadServer extends JFrame{
 							outputToClient.write(str + "\n");
 						}
 						else if(words[2].equals("write")) {
-							ud.writeZan(words[1], words[3], words[4], words[5]);
+							ud.writeZan(words[1], words[3], words[4], words[5], words[6]);
 						}
 					}
 					else if(words[0].equals("5")) {   //发送单词卡  5 接受者 发送者 单词 意思
-						String m = words[1] + " " + words[2] + " " + words[3] + " " + words[4] + "\n";
-						if (!message.contains(m)) {
-							message.add(m);
+						String[] m = getStr.split("~");
+						String res = m[1] + "~" + m[2] + "~" + m[3] + "~" + m[4] + "\n";
+						if (!message.contains(res)) {
+							message.add(res);
 				//			
 						}
 						
@@ -178,17 +180,17 @@ public class MultiThreadServer extends JFrame{
 						if (!message.isEmpty()) {
 							
 							for (int i = 0; i < message.size(); i++) {
-								String[] send = message.get(i).split(" ");
+								String[] send = message.get(i).split("~");
 						//		System.out.println(message.size() + " " + words[1] + " " + send[0]);
 								if (send[0].equals(words[1])) {
-									outputToClient.write("yes " + send[1] + " " + send[2] + " " + send[3] + "\n");
+									outputToClient.write("yes~" + send[1] + "~" + send[2] + "~" + send[3] + "\n");
 						//			System.out.println("ok");
 									message.remove(i);
 									outputToClient.flush();
 									break;
 								}
 								else {
-									outputToClient.write("no\n");
+									outputToClient.write("no~\n");
 									outputToClient.flush();
 								}
 							}
@@ -197,6 +199,12 @@ public class MultiThreadServer extends JFrame{
 							outputToClient.write("no\n");
 							outputToClient.flush();
 						}
+					}
+					else if (words[0].equals("6")) {
+						String res = ud.getUserZan(words[1], words[2], words[3]);
+						System.out.println(res);
+						outputToClient.write(res + "\n");
+			//			outputToClient.flush();
 					}
 					
 			/*		WordCard w = (WordCard)in.readObject();

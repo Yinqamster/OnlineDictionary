@@ -219,15 +219,22 @@ public class UserDatabase {
 		return numLike;
 	}
 	
-	public void writeZan(String ap, String word, String numOfZan, String user) {
+	public void writeZan(String ap, String word, String numOfZan, String user, String state) {
 		
+		//判断总赞表单词word是否存在
 		String sql0 = "select word from likeNum where word = " + "'" + word + "'";
+		//将总赞表中单词word的ap赞数改成numOfZan
 		String sql1 = "update likeNum set " + ap + " = " + numOfZan + " where word = " + "'" + word + "'";
+		//将单词word插入总赞表
 		String sql2 = "insert into likeNum (word) values(" + "'" + word + "'" + ")";
 		
+		//判断用户赞表中用户user对单词word是否赞过（任意ap）
 		String sql3 = "select word from user_like where word = " + "'" + word + "'" + " and user_name = " + "'" + user + "'";
-		String sql4 = "update user_like set " + ap + " = 1 where user_name = " + "'" + user + "'" + " and word = " + "'" + word + "'";
+		//将用户赞表中用户user对单词word在ap的状态设为1（赞了ap）
+		String sql4 = "update user_like set " + ap + " = " + state + " where user_name = " + "'" + user + "'" + " and word = " + "'" + word + "'";
+		//将用户user和单词word插入到用户赞表中
 		String sql5 = "insert into user_like (user_name, word) values(" + "'" + user + "' , '" + word + "'" + ")";
+		//在用户赞表中查找用户user对单词word在ap翻译下是否点赞
 		String sql6 = "select " + ap + " from user_like where word = " + "'" + word + "'" + " and user_name = " + "'" + user + "'";
 		
 		PreparedStatement pstmt0;
@@ -272,12 +279,12 @@ public class UserDatabase {
 		        pstmt2.executeUpdate();
 		        pstmt2.close();
 	        }
-	        if (zan == 0) {
+	//        if (zan == 0) {
 	        	PreparedStatement pstmt1;
 		        pstmt1 = (PreparedStatement) con.prepareStatement(sql1);
 		        pstmt1.executeUpdate();
 		        pstmt1.close();
-	        }
+	//        }
 	        
 	        
 	        
@@ -293,4 +300,34 @@ public class UserDatabase {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public String getUserZan(String str, String word, String user) {
+		String numLike = "";
+		PreparedStatement pstmt;
+		String sql = "select " + str + " from user_like where word = " + "'" + word + "' and user_name = " + "'" + user + "'";
+//		String sql = "select youdao from likeNum where word = '" + word + "'";
+		try{
+			
+			pstmt = (PreparedStatement) con.prepareStatement(sql);
+	        ResultSet rset = pstmt.executeQuery();
+	        if (rset.next()) {
+	        	numLike = rset.getString(1);
+	        }
+	        else {
+	        	numLike = "0";
+	        }
+	        pstmt.close();
+		}
+		catch (SQLException e) {
+	        e.printStackTrace();
+	    }	
+		return numLike;
+	}
+	
+	
+	
+	
+	
+	
+	
 }

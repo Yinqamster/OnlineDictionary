@@ -90,6 +90,9 @@ public class FrontPage extends JFrame{
 	private JTextArea jtfBaiDu = new JTextArea(7, 30); 
 	private JTextArea jtfBing = new JTextArea(7, 30); 
 	private JTextArea jtfYouDao = new JTextArea(7, 30); 
+	
+	
+	
 	JList jlist=new JList(new String[] {"发送单词卡：","点击用户","群发：","按住Ctrl并点击"});
 	DefaultListModel dfList=new DefaultListModel();
 	//DefaultListSelectionModel slList=new DefaultListSelectionModel();
@@ -157,6 +160,12 @@ public class FrontPage extends JFrame{
 		
 		//////////////////////////////////////不知道能不能这么写
 		/////////////////////////////////////////////////jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
+		//允许自动换行
+		jtfBaiDu.setLineWrap(true);
+		jtfYouDao.setLineWrap(true);
+		jtfBing.setLineWrap(true);
+		
 		userName=UserName;
 		JMenu userMenu=new JMenu(UserName);
 		img.setImage((img.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT)));
@@ -281,9 +290,16 @@ public class FrontPage extends JFrame{
 	    		jpMeaning.remove(jpYouDao);
 	    		jpMeaning.repaint();*/
 	    		
-	    		zanBaiDu.setIcon(img);
+	    		initIcon("baidu", socket);
+	    		initIcon("youdao", socket);
+	    		initIcon("bing", socket);
+	    		
+	    		
+	    		
+	/*    		zanBaiDu.setIcon(img);
 	    		zanBing.setIcon(img);
-	    		zanYouDao.setIcon(img);
+	    		zanYouDao.setIcon(img);*/
+	    		
 	    		String word=jtfInput.getText();
 	    		String meaningOfBaidu="please input";
 	    		String meaningOfBing="please input";
@@ -424,19 +440,28 @@ public class FrontPage extends JFrame{
 	    //点赞
 		zanBaiDu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				judgezanbaidu++;
-				if(judgezanbaidu%2==1)
-				{
-				zanBaiDu.setIcon(imgnew);
-				likeOFBaiDu++;
-				}
-				else
-				{
-					zanBaiDu.setIcon(img);
-					likeOFBaiDu--;
-				}
 				try {
-					toServer.write("4 baidu write " + jtfInput.getText() + " " + likeOFBaiDu + " " + UserName + "\n");
+			//		toServer.write("5 baidu " + jtfInput.getText() + " " + UserName + "\n");
+			//		toServer.flush();
+			//		judgezanbaidu = Integer.getInteger(fromServer.readLine());
+					
+					String state = "";
+					
+					judgezanbaidu++;
+					if(judgezanbaidu%2==1)
+					{
+					zanBaiDu.setIcon(imgnew);
+					likeOFBaiDu++;
+					state = "1";
+					}
+					else
+					{
+						zanBaiDu.setIcon(img);
+						likeOFBaiDu--;
+						state = "0";
+					}
+				
+					toServer.write("4 baidu write " + jtfInput.getText() + " " + likeOFBaiDu + " " + UserName + " " + state + "\n");
 					toServer.flush();
 				//写回数据库
 				}
@@ -447,18 +472,22 @@ public class FrontPage extends JFrame{
 		});
 		zanBing.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				String state = "";
 				judgezanbing++;
 				if(judgezanbing%2==1)
 				{
 				 zanBing.setIcon(imgnew);
-		         likeOFBing++;}
+		         likeOFBing++;
+		         state = "1";
+		         }
 				else{
 				zanBing.setIcon(img);
 				likeOFBing--;
+				state = "0";
 				}
 		         try {
 		        	 System.out.println(likeOFBing);
-		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + likeOFBing + " " + UserName + "\n");
+		        	 toServer.write("4 bing write " + jtfInput.getText() + " " + likeOFBing + " " + UserName + " " + state + "\n");
 		        	 toServer.flush();
 				//写回数据库
 				 }
@@ -469,18 +498,21 @@ public class FrontPage extends JFrame{
 		});
 		zanYouDao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				String state = "";
 				judgezanyoudao++;
 				if(judgezanyoudao%2==1)
 				{
 				zanYouDao.setIcon(imgnew);
-				likeOFYouDao++;}
+				likeOFYouDao++;
+				state = "1";}
 				else
 				{
 				zanYouDao.setIcon(img);
 				likeOFYouDao--;
+				state = "0";
 				}
 				try {
-					toServer.write("4 youdao write " + jtfInput.getText() + " " + likeOFYouDao + " " + UserName + "\n");
+					toServer.write("4 youdao write " + jtfInput.getText() + " " + likeOFYouDao + " " + UserName + " " + state + "\n");
 		        	 toServer.flush();
 				//写回数据库
 				 }
@@ -606,6 +638,12 @@ public class FrontPage extends JFrame{
 					
 					numOfWordCard++;
 					//String word=jtfInput.getText();
+					String[] send = sendMeaning.split("\n");
+					sendMeaning = "";
+					for (int j = 0; j < send.length; j++) {
+					//	System.out.println(send[j]);
+						sendMeaning += send[j] + "#";
+					}
 					WordCard wordcard=new WordCard(userName,word,sendMeaning);
 					try {
 						//createImage(wordcard,new Font("Microsoft YaHei UI",0,20),new File("D:\\desktop\\"+numOfWordCard+".png"),500,300);
@@ -633,7 +671,7 @@ public class FrontPage extends JFrame{
 				jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				jlist.repaint();				
 				String names=jlist.getSelectedValuesList().toString();
-				System.out.println(names);
+//				System.out.println(names);
 				names = names.substring(1, names.length()-1); 
 				//System.out.println(names.get(0));
 				jlist.repaint();
@@ -651,7 +689,15 @@ public class FrontPage extends JFrame{
 				//	out.writeObject(wordcard);
 				//	out.flush();
 					for (int i = 0; i < tokens.length; i++) {
-						toServer.write("5 " + tokens[i] + " " + userName + " " + word + " " + sendMeaning + "\n");
+						String outStr = "5 ~" + tokens[i] + "~" + userName + "~" + word + "~";
+						String[] send = sendMeaning.split("\n");
+						for (int j = 0; j < send.length; j++) {
+						//	System.out.println(send[j]);
+							outStr += send[j] + "#";
+						}
+				//		System.out.println(outStr);
+					//	toServer.write("5 " + tokens[i] + " " + userName + " " + word + " " + sendMeaning + "\n");
+						toServer.write(outStr + "\n");
 						toServer.flush();
 					}
 					
@@ -703,9 +749,9 @@ public class FrontPage extends JFrame{
 			pos[i][0] = temp1[i];
 			pos[i][1] = temp2[i];
 		}
-		for (int i = 0; i < 3; i++) {
+/*		for (int i = 0; i < 3; i++) {
 			System.out.println(pos[i][0] + " " + pos[i][1]);
-		}
+		}*/
 	}
 	
 	int[][] getPlace(int[][] pos) {
@@ -720,14 +766,48 @@ public class FrontPage extends JFrame{
 		}
 		
 		
-		for (int i = 0; i < 3; i++) {
+/*		for (int i = 0; i < 3; i++) {
 			System.out.println(pos[i][0] + " " + pos[i][1]);
-		}
+		}*/
 		pos[0][0] = 3;
 		pos[1][0] = 2;
 		pos[2][0] = 1;
 		return pos;
 	}
+	
+	void initIcon(String str, Socket socket) {
+		try {
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			
+			int judgezan = 0;
+			toServer.write("6 " + str + " " + jtfInput.getText() + " " + userName + "\n");
+			toServer.flush();
+			String res = fromServer.readLine();
+			System.out.println(res);
+			judgezan = Integer.parseInt(res);
+			
+			
+			if(judgezan==1) {
+				switch(str) {
+					case "baidu":zanBaiDu.setIcon(imgnew);judgezanbaidu = 1;break;
+					case "youdao":System.out.println("okkk");zanYouDao.setIcon(imgnew);judgezanyoudao = 1;break;
+					case "bing":zanBing.setIcon(imgnew);judgezanbing = 1;break;
+				}
+			}
+			else{
+				switch(str) {
+					case "baidu":zanBaiDu.setIcon(img);judgezanbaidu = 0;break;
+					case "youdao":zanYouDao.setIcon(img);judgezanyoudao = 0;break;
+					case "bing":zanBing.setIcon(img);judgezanbing = 0;break;
+				}
+			}
+		}
+		catch(IOException ex) {
+			System.out.println(ex);
+		}
+	}
+	
 	public static void createImage(client.view.WordCard word,Font font, File outFile,
 			Integer width, Integer height) throws Exception {
 		BufferedImage image = new BufferedImage(width, height,
@@ -747,9 +827,19 @@ public class FrontPage extends JFrame{
 		for (int i = 0; i < 6; i++) {// 256 340 0 680
 			g.drawString(str, i * 680, y);// 画出字符串
 		}*/
+		
+		String[] words = word.getExplanation().split("#");
+		
 		g.drawString("User: "+word.getUserName(),20,50);// 画出字符串
-		g.drawString("Word: "+word.getWord(),20,150);
-		g.drawString("Meaning: "+word.getExplanation(),20,250);
+		g.drawString("Word: "+word.getWord(),20,100);
+	//	g.drawString("Meaning: "+word.getExplanation(),20,250);
+		g.drawString("Meaning: "+words[0],20,150);
+		int pos = 150;
+		for (int i = 1; i < words.length; i++) {
+			pos = pos + 20;
+			g.drawString(words[i],20,pos);
+		}
+		//处理一下换行
 		g.dispose();
 		ImageIO.write(image, "png", outFile);// 输出png图片
 	}
@@ -779,11 +869,14 @@ public class FrontPage extends JFrame{
 		            		toServer.flush();
 		            		String str = fromServer.readLine();
 		            		System.out.println("receive?? " + str);
-		            		String[] words = str.split(" ");
+		            		String[] words = str.split("~");
 		            		if (words[0].equals("yes")) {
 		            			String name = words[1];
 		            			String word = words[2];
 		            			String meaning = words[3];
+		            	/*		for (int i = 0; i < meanings.length; i++) {
+		            				meaning += meanings[i] + "\n";
+		            			}*/
 		            			int n=JOptionPane.showConfirmDialog(null,"您收到来自用户"+name+"的单词卡，是否接受?","Notice",JOptionPane.OK_CANCEL_OPTION);
 		            			if(n==0)
 		            			{

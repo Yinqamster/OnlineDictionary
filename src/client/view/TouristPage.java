@@ -33,6 +33,10 @@ public class TouristPage extends JFrame{
 	public TouristPage()
 	{
 		/////////锟斤拷锟�/////////////////////
+		jtBaiDu.setLineWrap(true);
+		jtYouDao.setLineWrap(true);
+		jtBing.setLineWrap(true);
+		
 		setSize(800,760);
 		setTitle("Online Dictionary");
 		setLocationRelativeTo(null);
