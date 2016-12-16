@@ -1,4 +1,4 @@
-package server.control;
+package server.model;
 
 import java.net.Socket;
 import java.util.HashMap;

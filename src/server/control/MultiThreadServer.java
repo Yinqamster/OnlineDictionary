@@ -15,7 +15,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import client.control.UserDatabase;
+import server.model.UserController;
 
 public class MultiThreadServer extends JFrame{
 	private static final long serialVersionUID = 1L;

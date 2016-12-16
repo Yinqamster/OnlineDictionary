@@ -2,14 +2,10 @@ package client.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -18,18 +14,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
-import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -43,11 +34,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import client.model.WordCard;
 
 
 public class FrontPage extends JFrame{
@@ -58,7 +49,7 @@ public class FrontPage extends JFrame{
 	int judgezanyoudao=0;
 	int judgezanbing=0;
 	int numOfWordCard=0;
-	private client.control.UserDatabase database=new client.control.UserDatabase();
+	private server.control.UserDatabase database=new server.control.UserDatabase();
 	private client.control.DealAction deal=new client.control.DealAction();
 	private Font font=new Font("Microsoft YaHei UI",0,20);
 	private Font font1=new Font("Microsoft YaHei UI",0,25);
@@ -808,7 +799,7 @@ public class FrontPage extends JFrame{
 		}
 	}
 	
-	public static void createImage(client.view.WordCard word,Font font, File outFile,
+	public static void createImage(client.model.WordCard word,Font font, File outFile,
 			Integer width, Integer height) throws Exception {
 		BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_BGR);

@@ -1,4 +1,4 @@
-package client.control;
+package server.control;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
