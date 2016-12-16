@@ -38,7 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-//////////////锟铰硷拷锟斤拷锟斤拷/////////////////
+////封装了一些事件处理时需要用到的函数，主要是单词的查询
 public class DealAction {
 	
 	String word=null;
