@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-/////////////////////锟轿客斤拷锟斤拷//////////////////////
+/////////////////////游客界面//////////////////////
 public class TouristPage extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
@@ -90,7 +90,7 @@ public class TouristPage extends JFrame{
 		//jtBing.setVisible(false);
 		add(jtBing);
 		/////////////////////锟铰硷拷锟斤拷锟斤拷//////////////////
-		//锟斤拷录锟斤拷锟铰硷拷锟斤拷锟斤拷
+		//登录按钮
 		jbtTouristLogin.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
 	    	///////锟斤拷锟截碉拷录锟斤拷锟斤拷
@@ -98,7 +98,7 @@ public class TouristPage extends JFrame{
 				new LogInterface();
 	    	}
 	    });
-		//search锟斤拷钮锟斤拷锟铰硷拷锟斤拷锟斤拷
+		//search按钮
 		jbtSearch.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
 	    		String userInput=jtfInput.getText();
@@ -136,14 +136,13 @@ public class TouristPage extends JFrame{
 	    		
 	    	}
 		});
-		jbtTouristLogin.addActionListener(new ActionListener(){
+		/*jbtTouristLogin.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
 			{
 				//cardlayout.last(cardpanel);
 				setVisible(false);
 			}
-		});
-		
+		});*/
 	}
 	
 	/*

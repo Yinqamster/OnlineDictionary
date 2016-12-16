@@ -40,7 +40,7 @@ import javax.swing.event.ListSelectionListener;
 
 import client.model.WordCard;
 
-
+//主界面
 public class FrontPage extends JFrame{
 	private BufferedWriter toServer;
 	private BufferedReader fromServer;
@@ -243,17 +243,17 @@ public class FrontPage extends JFrame{
 		jpBaidu.add(jtfBaiDu,BorderLayout.CENTER);
 		jpBaidu.add(zanBaiDu,BorderLayout.EAST);
 		jpBaidu.add(jlbbaidu,BorderLayout.WEST);
-		jpMeaning.add(jpBaidu,BorderLayout.NORTH);    ////位置需要更改
+		jpMeaning.add(jpBaidu,BorderLayout.NORTH);    
 		jpYouDao.setLayout(new BorderLayout(10, 10));
 		jpYouDao.add(zanYouDao, BorderLayout.EAST);
 		jpYouDao.add(jtfYouDao,BorderLayout.CENTER);
 		jpYouDao.add(jlbyoudao, BorderLayout.WEST);
-		jpMeaning.add(jpYouDao,BorderLayout.CENTER);  ///位置需要更改
+		jpMeaning.add(jpYouDao,BorderLayout.CENTER);  
 		jpBing.setLayout(new BorderLayout(10, 10));
 		jpBing.add(zanBing, BorderLayout.EAST);
 		jpBing.add(jtfBing, BorderLayout.CENTER);
 		jpBing.add(jlbbing, BorderLayout.WEST);
-		jpMeaning.add(jpBing,BorderLayout.SOUTH);   ///位置需要更改
+		jpMeaning.add(jpBing,BorderLayout.SOUTH);   
 		
 		add(new JScrollPane(jlist),BorderLayout.CENTER);
 		//jpBaidu.setVisible(false);
@@ -261,13 +261,14 @@ public class FrontPage extends JFrame{
 		//jpYouDao.setVisible(false);
 		//this.validate();
 		pack();
+		//帮助菜单
 		helpMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
 			{
 				JOptionPane.showMessageDialog(null,"This is an online dictionary","Help",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		/////search
+		//查找单词，并按照点赞次数排序后显示
 		jbtSearch.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
 	    		likeOFBaiDu=-1;
@@ -284,8 +285,6 @@ public class FrontPage extends JFrame{
 	    		initIcon("baidu", socket);
 	    		initIcon("youdao", socket);
 	    		initIcon("bing", socket);
-	    		
-	    		
 	    		
 	/*    		zanBaiDu.setIcon(img);
 	    		zanBing.setIcon(img);
@@ -428,7 +427,7 @@ public class FrontPage extends JFrame{
 	    	//	jpMeaning.repaint();
 	    	}
 	    });
-	    //点赞
+	    //点赞，点一次为点赞，再点一次取消点赞
 		zanBaiDu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				try {
@@ -744,7 +743,7 @@ public class FrontPage extends JFrame{
 			System.out.println(pos[i][0] + " " + pos[i][1]);
 		}*/
 	}
-	
+	//根据点赞数获取面板的位置
 	int[][] getPlace(int[][] pos) {
 		
 		for (int i = 0; i < 2; i++) {
@@ -798,8 +797,13 @@ public class FrontPage extends JFrame{
 			System.out.println(ex);
 		}
 	}
+<<<<<<< HEAD
 	
 	public static void createImage(client.model.WordCard word,Font font, File outFile,
+=======
+	//生成图片
+	public static void createImage(client.model.WordCard word,Font font, File outFile,
+>>>>>>> branch 'master' of https://github.com/Yinqamster/OnlineDictionary.git
 			Integer width, Integer height) throws Exception {
 		BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_BGR);
@@ -837,7 +841,7 @@ public class FrontPage extends JFrame{
 	
 
 	
-	
+	//接收单词卡
 	class Receive implements Runnable{
 		private BufferedWriter toServer;
 		private BufferedReader fromServer;
