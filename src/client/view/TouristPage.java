@@ -111,6 +111,12 @@ public class TouristPage extends JFrame{
 	    		jtBing.setText(meaning);
 	    		if(deal.checkLegality(userInput))
 	    		{
+	    			if((!baiduSelected)&&(!youDaoSelected)&&(!bingSelected))
+	    			{
+	    				baiduSelected=true;
+	    				youDaoSelected=true;
+	    				bingSelected=true;
+	    			}
 	    			
 	    			if(baiduSelected)
 	    			{

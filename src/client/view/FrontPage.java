@@ -291,9 +291,9 @@ public class FrontPage extends JFrame{
 	    		zanYouDao.setIcon(img);*/
 	    		
 	    		String word=jtfInput.getText();
-	    		String meaningOfBaidu="please input";
-	    		String meaningOfBing="please input";
-	    		String meaningOfYouDao="please input";
+	    		String meaningOfBaidu="please input correctly";
+	    		String meaningOfBing="please input correctly";
+	    		String meaningOfYouDao="please input correctly";
 	    		boolean baiduSelected=jcBaidu.isSelected();
 	    		boolean youDaoSelected=jcYouDao.isSelected();
 	    		boolean bingSelected=jcBing.isSelected();
@@ -550,7 +550,7 @@ public class FrontPage extends JFrame{
 		});
 		offlineUser.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				database.createConnection();
+		//		database.createConnection();
 				dfList.clear();
 				try {
 					toServer.write("2 " + "off" + "\n");
@@ -797,14 +797,10 @@ public class FrontPage extends JFrame{
 			System.out.println(ex);
 		}
 	}
-<<<<<<< HEAD
 	
-	public static void createImage(client.model.WordCard word,Font font, File outFile,
-=======
+
 	//生成图片
-	public static void createImage(client.model.WordCard word,Font font, File outFile,
->>>>>>> branch 'master' of https://github.com/Yinqamster/OnlineDictionary.git
-			Integer width, Integer height) throws Exception {
+	public static void createImage(client.model.WordCard word,Font font, File outFile,Integer width, Integer height) throws Exception {
 		BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_BGR);
 		Graphics g = image.getGraphics();

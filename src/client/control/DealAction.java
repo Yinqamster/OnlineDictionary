@@ -49,7 +49,7 @@ public class DealAction {
 	//check whether the input is legal
 	public boolean checkLegality(String str)
 	{
-		Pattern p=Pattern.compile("[a-zA-Z -]+");
+		Pattern p=Pattern.compile("[a-zA-Z-]+");
 		Matcher m=p.matcher(str);
 		if(!m.matches())
 		{
